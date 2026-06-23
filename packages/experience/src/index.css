@@ -162,6 +162,26 @@
     overflow-x: clip;
   }
 
+  /* Branded ambient canvas — DESKTOP ONLY. A warm rose glow (top-centre) over a faint
+     dot-grid and a soft radial canvas gradient, so the floating card reads with real
+     depth instead of sitting on a flat field. Scoped to body.desktop on purpose: on
+     mobile the card is full-bleed and iOS extends body into the safe-area strips, where
+     a gradient produced mismatched bars before — mobile keeps the solid elevated surface. */
+  body.desktop {
+    background:
+      radial-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px) 0 0 / 22px 22px,
+      radial-gradient(55% 45% at 50% 0%, rgba(225, 29, 72, 0.12) 0%, rgba(225, 29, 72, 0) 68%),
+      radial-gradient(80% 80% at 50% 45%, #f3f4f6 0%, #e6e8ec 100%);
+    background-attachment: fixed;
+  }
+  :root[data-theme="dark"] body.desktop {
+    background:
+      radial-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px) 0 0 / 22px 22px,
+      radial-gradient(60% 50% at 50% 0%, rgba(232, 74, 108, 0.12) 0%, rgba(232, 74, 108, 0) 70%),
+      radial-gradient(90% 90% at 50% 30%, #0e0e11 0%, #09090b 100%);
+    background-attachment: fixed;
+  }
+
   /* iOS safe-area fix: on mobile the auth surface is FULL-BLEED (the card uses
      bg-elevated and stretches edge-to-edge), but html/body paint the canvas color
      (--bg). iOS extends html/body into the notch + home-indicator strips, so those

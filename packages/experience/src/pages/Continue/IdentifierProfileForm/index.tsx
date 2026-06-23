@@ -110,8 +110,10 @@ const IdentifierProfileForm = ({
           },
         }}
         render={({ field }) => (
+          // No autoComplete="off" here: this is the "add your email / phone" profile step,
+          // where the browser SHOULD offer the user's email/phone. SmartInputField computes
+          // the correct token (email / tel) from enabledTypes via getInputHtmlProps.
           <SmartInputField
-            autoComplete="off"
             autoFocus={autoFocus}
             className="mb-4"
             {...field}

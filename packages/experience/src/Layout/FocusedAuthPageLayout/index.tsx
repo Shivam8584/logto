@@ -1,13 +1,17 @@
 import { type AgreeToTermsPolicy } from '@logto/schemas';
+import classNames from 'classnames';
 import { type TFuncKey } from 'i18next';
-import { useMemo, type ReactNode } from 'react';
+import { useContext, useMemo, type ReactNode } from 'react';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
+import BrandingHeader from '@/components/BrandingHeader';
 import type { Props as TextLinkProps } from '@/components/TextLink';
 import TextLink from '@/components/TextLink';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import useTerms from '@/hooks/use-terms';
-import DynamicT from '@/shared/components/DynamicT';
 import type { Props as PageMetaProps } from '@/shared/components/PageMeta';
+import { getBrandingLogoUrl } from '@/shared/utils/logo';
+import { layoutClassNames } from '@/utils/consts';
 
 import FirstScreenLayout from '../FirstScreenLayout';
 
@@ -35,20 +39,34 @@ const FocusedAuthPageLayout = ({
   authOptionsLink,
 }: Props) => {
   const { agreeToTermsPolicy } = useTerms();
+  const { experienceSettings, theme } = useContext(PageContext);
 
   const shouldDisplayFooterTerms = useMemo(
     () => agreeToTermsPolicy && footerTermsDisplayPolicies.includes(agreeToTermsPolicy),
     [agreeToTermsPolicy, footerTermsDisplayPolicies]
   );
 
+  const logo = experienceSettings
+    ? getBrandingLogoUrl({
+        theme,
+        branding: experienceSettings.branding,
+        isDarkModeEnabled: experienceSettings.color.isDarkModeEnabled,
+      })
+    : undefined;
+
   return (
     <FirstScreenLayout pageMeta={pageMeta}>
-      <div className="mt-6 mb-7">
-        <div className="-tracking-[0.01em] text-ink mobile:text-[28px]/[36px] mobile:font-semibold desktop:text-2xl desktop:font-semibold">
-          <DynamicT forKey={title} />
-        </div>
-        <div className="mt-2 text-sm text-muted">{description}</div>
-      </div>
+      {/* Render the brand logo (+ title as headline) like LandingPageLayout — the focused
+          identifier screens (e.g. "Continue with phone") were missing the logo entirely. */}
+      <BrandingHeader
+        className={classNames(
+          'mobile:mt-3 mobile:pb-6 desktop:mb-6',
+          layoutClassNames.brandingHeader
+        )}
+        headline={title}
+        logo={logo}
+      />
+      <div className="mb-7 -mt-2 text-sm text-muted">{description}</div>
       {children}
       {shouldDisplayFooterTerms && (
         <TermsAndPrivacyLinks className="mt-4 text-center text-xs text-muted" />
