@@ -41,12 +41,23 @@ const CountryCodeDropdown = ({
   const [selectedCountryCode, setSelectedCountryCode] = useState('');
   const debouncedSearchValue = useDebounce(searchValue, 100);
 
+  // On mobile the search field carries inputMode="none" by default, so opening the sheet
+  // shows the full country list WITHOUT the on-screen keyboard covering it (the robust,
+  // cross-browser fix — blur()/preventDefault alone are unreliable on iOS Safari). The
+  // keyboard is enabled only when the user deliberately taps the search field to type.
+  const [isSearchEngaged, setIsSearchEngaged] = useState(false);
+
+  const onSearchPointerDown = useCallback(() => {
+    setIsSearchEngaged(true);
+  }, []);
+
   const onSearchChange = useCallback(({ target }: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(target.value);
   }, []);
 
   const onDestroy = useCallback(() => {
     setSearchValue('');
+    setIsSearchEngaged(false);
     onClose();
   }, [onClose]);
 
@@ -289,7 +300,10 @@ const CountryCodeDropdown = ({
           autoFocus={!isMobile}
           name="country-code-search"
           type="text"
-          inputMode="text"
+          // inputMode="none" on mobile until the user taps to search — keeps the keyboard
+          // down so the list stays visible. Desktop and engaged-search use the text keyboard.
+          inputMode={isMobile && !isSearchEngaged ? 'none' : 'text'}
+          onPointerDown={isMobile ? onSearchPointerDown : undefined}
           prefix={<MagnifyingGlassIcon className="w-5 h-5" />}
           value={searchValue}
           className="mb-2 [&_input]:ps-2 [&_svg]:text-muted [&_svg]:self-center mobile:[&:not(:first-child)]:mt-2"
