@@ -76,12 +76,18 @@ jobs:
             type=raw,value=${{ github.event.inputs.tag || 'dev' }}
             type=sha,format=short
 
-      - name: Build and push image (amd64)
+      - name: Set up QEMU (for arm64 emulation)
+        uses: docker/setup-qemu-action@v3
+
+      # Build the amd64 image locally first (load into the runner's Docker) so the
+      # smoke test can boot it on the amd64 runner. Cached layers are reused by the
+      # multi-arch push below.
+      - name: Build amd64 image for smoke test
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64
           context: .
-          push: true
+          push: false
           load: true
           build-args: |
             dev_features_enabled=false
@@ -125,6 +131,22 @@ jobs:
           test -n "$ok"
           echo "--- discovery (proves it runs) ---"; head -c 400 /tmp/disco.json; echo
           echo "SMOKE TEST PASSED ✓"
+
+      # Only after the smoke test passes: build + push multi-arch (amd64 + arm64).
+      # arm64 is required by the production Dokploy host (aarch64). Reuses the amd64
+      # layers from the cache; arm64 is built fresh via QEMU.
+      - name: Build and push multi-arch image (amd64 + arm64)
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: .
+          push: true
+          build-args: |
+            dev_features_enabled=false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Image summary
         run: |
