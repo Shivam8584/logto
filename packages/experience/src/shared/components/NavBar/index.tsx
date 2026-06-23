@@ -10,14 +10,18 @@ const navBarClass =
   'w-full min-h-[44px] flex items-center justify-center py-3 px-10 relative text-ink [&>svg]:fill-current ' +
   'mobile:data-[hidden]:invisible desktop:data-[hidden]:hidden';
 
+// Back/skip present a 44px tap target on mobile (icon-only back button is otherwise ~28px,
+// below Apple HIG). Padding stays visually compact; min-h/min-w grow only the hit area.
 const navButtonClass =
-  'absolute start-0 top-1/2 -translate-y-1/2 text-sm font-medium flex items-center cursor-pointer gap-1 py-1 px-2 -ms-2 rounded-[11px] ' +
+  'absolute start-0 top-1/2 -translate-y-1/2 text-sm font-medium flex items-center justify-center cursor-pointer gap-1 py-1 px-2 -ms-2 rounded-[11px] ' +
+  'mobile:min-h-[44px] mobile:min-w-[44px] ' +
   'transition-[background-color] duration-150 ease-in-out motion-reduce:transition-none ' +
   'overlay-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-brand-default)] focus-visible:outline-offset-1 ' +
   'mobile:[&>span]:hidden';
 
 const skipButtonClass =
   'absolute end-0 top-1/2 -translate-y-1/2 text-base font-medium cursor-pointer text-primary py-1 px-2 -me-1 rounded-[11px] ' +
+  'flex items-center justify-center mobile:min-h-[44px] mobile:min-w-[44px] ' +
   'transition-[background-color] duration-150 ease-in-out motion-reduce:transition-none ' +
   'overlay-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-brand-default)] focus-visible:outline-offset-1 ' +
   'desktop:text-sm';

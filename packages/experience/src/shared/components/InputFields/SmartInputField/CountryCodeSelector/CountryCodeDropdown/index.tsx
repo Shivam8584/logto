@@ -233,21 +233,33 @@ const CountryCodeDropdown = ({
     <ReactModal
       id="country-code-dropdown"
       isOpen={isOpen}
-      overlayClassName="bg-transparent fixed inset-0 z-40 mobile:z-[var(--z-dropdown)]"
-      className="absolute z-50 focus-visible:outline-none mobile:inset-0"
+      // Desktop: invisible click-catcher overlay (the sheet is a positioned popover).
+      // Mobile: dimmed mask behind a bottom sheet that slides up from the edge.
+      overlayClassName="bg-transparent fixed inset-0 z-40 mobile:z-[var(--z-modal)] mobile:bg-[var(--color-bg-mask)]"
+      // Desktop popover keeps its measured `position`. Mobile becomes a bottom sheet:
+      // pinned to the bottom edge, full width, capped at 85svh, rounded top, sliding in
+      // via translate-y (matches OrganizationSelectorModal's pattern).
+      className={
+        'absolute z-50 focus-visible:outline-none ' +
+        'mobile:inset-x-0 mobile:bottom-0 mobile:top-auto mobile:max-h-[85svh] ' +
+        'mobile:rounded-t-[20px] mobile:overflow-hidden mobile:pb-[env(safe-area-inset-bottom)] ' +
+        'mobile:translate-y-full mobile:transition-transform mobile:duration-300 mobile:ease-[var(--ease-out)] ' +
+        'mobile:[&.ReactModal__Content--after-open]:translate-y-0 ' +
+        'mobile:[&.ReactModal__Content--before-close]:translate-y-full'
+      }
       style={{
         content: {
           ...position,
         },
       }}
-      closeTimeoutMS={200}
+      closeTimeoutMS={isMobile ? 300 : 200}
       onRequestClose={(event) => {
         event.stopPropagation();
         onDestroy();
       }}
     >
       <div
-        className="bg-elevated py-2 px-3 desktop:border desktop:border-line-strong desktop:shadow-[var(--sh-float)] desktop:rounded-[13px] desktop:py-3 mobile:flex mobile:flex-col mobile:items-stretch mobile:h-full"
+        className="bg-elevated py-2 px-3 desktop:border desktop:border-line-strong desktop:shadow-[var(--sh-float)] desktop:rounded-[13px] desktop:py-3 mobile:flex mobile:flex-col mobile:items-stretch mobile:max-h-[85svh] mobile:rounded-t-[20px] mobile:px-4 mobile:pt-2 mobile:pb-3"
         role="button"
         tabIndex={0}
         onClick={(event) => {
@@ -260,7 +272,15 @@ const CountryCodeDropdown = ({
         }}
       >
         {isMobile && (
-          <NavBar type="back" title={t('input.search_region_code')} onClose={onDestroy} />
+          <>
+            {/* Grab handle — the standard affordance that signals a draggable/dismissible
+                bottom sheet (iOS/Android pattern). Purely visual; tap the mask or Back to close. */}
+            <div
+              aria-hidden
+              className="mx-auto mb-1 mt-0.5 h-1 w-9 shrink-0 rounded-full bg-[var(--color-line-strong)]"
+            />
+            <NavBar type="back" title={t('input.search_region_code')} onClose={onDestroy} />
+          </>
         )}
         <InputField
           autoFocus

@@ -3,17 +3,22 @@ import { useMemo, useRef, useCallback, useEffect } from 'react';
 
 import ErrorMessage from '@/shared/components/ErrorMessage';
 
+// On mobile the boxes flex to fill the field width evenly (so 6 cells always span the
+// container with no awkward right-edge gap), while staying ≥44px tall/wide for Apple HIG.
+// Desktop keeps fixed 44×52 boxes. 18px font throughout keeps iOS from zoom-on-focus.
 const passcodeClass =
-  'flex items-center gap-2.5 ' +
-  '[&_input]:w-11 [&_input]:h-[52px] [&_input]:rounded-[11px] [&_input]:border [&_input]:border-line-strong [&_input]:bg-elevated ' +
+  'flex items-center gap-2.5 mobile:gap-2 mobile:w-full ' +
+  '[&_input]:w-11 [&_input]:h-[52px] [&_input]:rounded-[12px] [&_input]:border [&_input]:border-line-strong [&_input]:bg-elevated ' +
   '[&_input]:text-center [&_input]:text-lg [&_input]:font-semibold [&_input]:text-ink [&_input]:[caret-color:var(--color-brand-default)] ' +
   '[&_input]:[font-variant-numeric:tabular-nums] [&_input]:tracking-wide [&_input]:shadow-[var(--sh-input)] ' +
+  '[&_input]:transition-[outline-color,border-color,background-color] [&_input]:duration-100 [&_input]:ease-in-out motion-reduce:[&_input]:transition-none ' +
   '[&_input:focus]:border-[var(--color-brand-default)] [&_input:focus]:outline-none ' +
   '[&_input::placeholder]:text-muted ' +
-  'max-[420px]:gap-2 max-[420px]:[&_input]:w-10 max-[420px]:[&_input]:h-12 ' +
+  // Mobile: each cell flexes to share the row equally, clamped to a comfortable ≥44px min.
+  'mobile:[&_input]:flex-1 mobile:[&_input]:min-w-[44px] mobile:[&_input]:w-auto mobile:[&_input]:h-[52px] mobile:[&_input]:min-h-[44px] ' +
   'desktop:[&_input]:text-lg desktop:[&_input]:outline desktop:[&_input]:outline-[3px] desktop:[&_input]:outline-transparent ' +
-  'desktop:[&_input]:transition-[background-color,outline-color,border-color] desktop:[&_input]:duration-100 desktop:[&_input]:ease-in-out motion-reduce:desktop:[&_input]:transition-none ' +
   'desktop:[&_input:focus]:outline-[var(--color-overlay-brand-focused)] ' +
+  '[&_input:focus]:outline [&_input:focus]:outline-[3px] [&_input:focus]:outline-[var(--color-overlay-brand-focused)] ' +
   'desktop:[&_input:hover:not(:focus)]:bg-[var(--color-overlay-neutral-hover)]';
 
 export const defaultLength = 6;
