@@ -60,12 +60,46 @@ jobs:
           platforms: linux/amd64
           context: .
           push: true
+          load: true
           build-args: |
             dev_features_enabled=false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Smoke test (boot the image + verify it serves OIDC)
+        run: |
+          set -euo pipefail
+          IMAGE='${{ steps.image.outputs.name }}:${{ github.event.inputs.tag || ''dev'' }}'
+
+          # Backing services the server needs to boot.
+          docker network create logto-smoke
+          docker run -d --name pg --network logto-smoke \
+            -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=p0stgr3s -e POSTGRES_DB=logto \
+            postgres:17-alpine
+          docker run -d --name redis --network logto-smoke redis:7-alpine
+          for i in $(seq 1 20); do docker exec pg pg_isready -U postgres -d logto && break; sleep 2; done
+
+          # Seed the DB using the image's own CLI, then boot the server.
+          DB_URL='postgres://postgres:p0stgr3s@pg:5432/logto'
+          docker run --rm --network logto-smoke -e DB_URL="$DB_URL" \
+            --entrypoint npm "$IMAGE" run cli db seed -- --swe
+
+          docker run -d --name logto --network logto-smoke -p 3001:3001 \
+            -e DB_URL="$DB_URL" -e REDIS_URL='redis://redis:6379' \
+            -e ENDPOINT='http://localhost:3001' "$IMAGE"
+
+          # Wait for the OIDC discovery document to be served — proves the full bundle runs.
+          ok=
+          for i in $(seq 1 40); do
+            if curl -fsS http://localhost:3001/oidc/.well-known/openid-configuration >/tmp/disco.json 2>/dev/null; then ok=1; break; fi
+            sleep 3
+          done
+          echo "--- server logs ---"; docker logs logto 2>&1 | tail -30
+          test -n "$ok"
+          echo "--- discovery (proves it runs) ---"; head -c 400 /tmp/disco.json; echo
+          echo "SMOKE TEST PASSED ✓"
 
       - name: Image summary
         run: |
