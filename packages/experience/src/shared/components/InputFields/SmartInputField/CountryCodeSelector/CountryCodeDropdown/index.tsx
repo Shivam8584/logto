@@ -261,11 +261,12 @@ const CountryCodeDropdown = ({
     />
   );
 
-  // Country list — shared. `tall` lets the desktop popover cap height while the mobile
-  // sheet scroller owns its own height.
+  // Country list — shared by both surfaces. No negative margins / horizontal padding here
+  // (those caused sideways scroll inside the sheet); spacing is owned by each wrapper.
+  // On desktop the popover wrapper caps + scrolls; on mobile Sheet.Content scrolls.
   const countryListEl = (
     <>
-      <ul className="-mx-3 px-3 list-none overflow-y-auto desktop:max-h-[400px] mobile:text-base">
+      <ul className="list-none mobile:text-base desktop:max-h-[400px] desktop:overflow-y-auto">
         {filteredCountryList.map(({ countryCallingCode, countryCode: countryKeyCode, countryName }) => {
           const isActive = countryCallingCode === countryCode;
           const isSelected = countryKeyCode === selectedCountryCode;
@@ -329,30 +330,49 @@ const CountryCodeDropdown = ({
     return (
       <Sheet
         isOpen={isOpen}
+        // Size to content (capped by Container max-height), not a fixed snap.
         detent="content"
-        // Cap at 85svh so a long list never covers the whole screen.
+        // Lift the sheet above the on-screen keyboard if the search field is focused.
+        avoidKeyboard
+        // SINGLE close handler — fires for backdrop tap, drag-down dismiss, and Esc.
+        // (Putting onTap on the backdrop too double-fired and bubbled to the trigger
+        // underneath, re-opening the sheet — that was the "pops back" bug.)
         onClose={onDestroy}
       >
         <Sheet.Container
           className="!bg-elevated !rounded-t-[20px] !shadow-[var(--sh-float)]"
           style={{ maxHeight: '85svh' }}
         >
-          <Sheet.Header>
-            {/* DragIndicator = the grab handle; dragging the header dismisses the sheet. */}
-            <Sheet.DragIndicator className="!bg-[var(--color-line-strong)]" />
-            <div className="px-4 pb-2 pt-1">
+          {/* Passing children to Sheet.Header suppresses its built-in drag indicator, so we
+              render our own grab handle once (a single line — the earlier extra
+              Sheet.DragIndicator was the stray grey line). The whole header is the drag
+              surface. */}
+          <Sheet.Header className="!bg-transparent">
+            <div className="flex flex-col px-4 pb-1 pt-2">
+              <div
+                aria-hidden
+                className="mx-auto mb-3 h-1 w-9 shrink-0 rounded-full bg-[var(--color-line-strong)]"
+              />
               <div className="mb-3 text-center text-sm font-medium text-ink">
                 {t('input.search_region_code')}
               </div>
               {searchField}
             </div>
           </Sheet.Header>
-          {/* disableScroll=false lets the list scroll inside; the library stops drag-to-
-              dismiss from fighting an active scroll automatically. */}
-          <Sheet.Content className="overflow-y-auto px-4 pb-[max(env(safe-area-inset-bottom),12px)]">
+          {/* Sheet.Content has a BUILT-IN vertical scroller (styled via scrollClassName) —
+              we add no overflow utilities of our own. disableDrag while the list is mid-
+              scroll so the gesture scrolls instead of dragging the sheet shut. */}
+          <Sheet.Content
+            disableDrag={({ scrollPosition }) => scrollPosition !== 'top'}
+            scrollClassName="px-4 pb-[max(env(safe-area-inset-bottom),12px)] overscroll-contain"
+          >
             {countryListEl}
           </Sheet.Content>
         </Sheet.Container>
+        {/* The backdrop is only interactive when given a handler (the lib sets
+            pointer-events:none otherwise), so onTap IS required to close on outside-tap.
+            The selector trigger guards against the same tap re-opening it (see
+            CountryCodeSelector: it ignores opens for a moment after close). */}
         <Sheet.Backdrop className="!bg-[var(--color-bg-mask)]" onTap={onDestroy} />
       </Sheet>
     );

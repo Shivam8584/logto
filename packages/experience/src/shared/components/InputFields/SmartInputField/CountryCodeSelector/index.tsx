@@ -2,7 +2,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { DynamicFlag, FlagUtils } from '@sankyu/react-circle-flags';
 import classNames from 'classnames';
 import type { ForwardedRef } from 'react';
-import { useState, useMemo, forwardRef } from 'react';
+import { useState, useMemo, useRef, forwardRef } from 'react';
 
 import { onKeyDownHandler } from '@/shared/utils/a11y';
 import {
@@ -27,10 +27,17 @@ const CountryCodeSelector = (
   ref: ForwardedRef<HTMLDivElement>
 ) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // Timestamp of the last close. A backdrop tap that dismisses the sheet can bubble to
+  // this trigger and immediately re-open it ("pops back" bug). Ignore opens fired within
+  // a short window of a close so the dismiss gesture can't reopen the sheet.
+  const lastClosedAt = useRef(0);
   const countryList = useMemo(getCountryList, []);
   const defaultCountCode = useMemo(getDefaultCountryCallingCode, []);
 
   const showDropDown = () => {
+    if (Date.now() - lastClosedAt.current < 350) {
+      return;
+    }
     // Blur the phone number input before opening, so the on-screen keyboard dismisses
     // instead of staying up (or re-popping) behind the country sheet/popover on mobile.
     inputRef?.current?.blur();
@@ -38,6 +45,8 @@ const CountryCodeSelector = (
   };
 
   const hideDropDown = () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    lastClosedAt.current = Date.now();
     setIsDropdownOpen(false);
   };
 
