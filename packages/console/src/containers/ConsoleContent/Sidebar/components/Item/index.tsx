@@ -5,6 +5,8 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import useTenantPathname from '@/hooks/use-tenant-pathname';
+
 import { getPath } from '../../utils';
 
 import styles from './index.module.scss';
@@ -22,6 +24,7 @@ function Item({ icon, titleKey, modal, externalLink, path, isActive = false }: P
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tabs',
   });
+  const { getTo } = useTenantPathname();
   const [isOpen, setIsOpen] = useState(false);
 
   const content = useMemo(
@@ -60,11 +63,17 @@ function Item({ icon, titleKey, modal, externalLink, path, isActive = false }: P
     );
   }
 
+  // react-router-dom v7 resolves a RELATIVE `to` (e.g. "sign-in-experience") against the
+  // CURRENT location, not the route — so clicking sidebar items APPENDED segments and
+  // compounded into ".../sign-in-experience/sign-in-experience/mfa/..." → "Page not found"
+  // (this worked under v6's route-relative resolution). Make the target absolute and
+  // tenant-aware via getTo(), exactly like TabNavItem, so every click navigates to the
+  // tenant-rooted page regardless of where the user currently is.
+  const relativePath = path ?? getPath(titleKey);
+  const to = getTo(relativePath.startsWith('/') ? relativePath : `/${relativePath}`);
+
   return (
-    <Link
-      to={path ?? getPath(titleKey)}
-      className={classNames(styles.row, isActive && styles.active)}
-    >
+    <Link to={to} className={classNames(styles.row, isActive && styles.active)}>
       {content}
     </Link>
   );
