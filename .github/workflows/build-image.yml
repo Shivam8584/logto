@@ -69,9 +69,12 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Smoke test (boot the image + verify it serves OIDC)
+        env:
+          IMAGE_NAME: ${{ steps.image.outputs.name }}
+          IMAGE_TAG: ${{ github.event.inputs.tag || 'dev' }}
         run: |
           set -euo pipefail
-          IMAGE='${{ steps.image.outputs.name }}:${{ github.event.inputs.tag || ''dev'' }}'
+          IMAGE="${IMAGE_NAME}:${IMAGE_TAG}"
 
           # Backing services the server needs to boot.
           docker network create logto-smoke
