@@ -40,12 +40,17 @@ const CountryCodeSelector = (
     <div
       ref={ref}
       className={classNames(
-        'text-base font-medium text-ink border border-transparent rounded-s-[10px] bg-none relative h-full ps-4 pe-1 ' +
-          'flex items-center overflow-hidden whitespace-nowrap opacity-0 pointer-events-none ' +
-          'focus-visible:border focus-visible:border-[var(--color-brand-default)] ' +
-          '[&>svg]:shrink-0 [&>svg]:text-muted [&>svg]:ms-1 [&>svg]:w-4 [&>svg]:h-4 ' +
-          'desktop:text-sm desktop:[&>svg]:ms-2 desktop:[&>svg]:w-5 desktop:[&>svg]:h-5',
+        'text-base font-medium text-ink border border-transparent rounded-s-[10px] relative h-full ps-4 pe-2 ' +
+          'flex items-center whitespace-nowrap opacity-0 pointer-events-none select-none ' +
+          'transition-colors duration-150 ' +
+          // Clear interactive affordance: cursor + hover/active tint so it reads as a button.
+          'cursor-pointer hover:bg-[var(--color-overlay-neutral-hover)] active:bg-[var(--color-overlay-neutral-pressed)] ' +
+          'focus-visible:border focus-visible:border-[var(--color-brand-default)] focus-visible:outline-none ' +
+          // Chevron sits a touch closer and rotates subtly when the dropdown is open.
+          '[&>svg]:shrink-0 [&>svg]:text-muted [&>svg]:ms-1 [&>svg]:w-4 [&>svg]:h-4 [&>svg]:transition-transform [&>svg]:duration-200 ' +
+          'desktop:text-sm desktop:[&>svg]:ms-1.5 desktop:[&>svg]:w-5 desktop:[&>svg]:h-5',
         isVisible && 'opacity-100 pointer-events-auto',
+        isDropdownOpen && '[&>svg]:rotate-180 text-ink bg-[var(--color-overlay-neutral-hover)]',
         className
       )}
       role="button"
