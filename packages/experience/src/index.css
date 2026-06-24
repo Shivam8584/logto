@@ -351,6 +351,16 @@
     transform: scale(0.985);
     transition-duration: 80ms;
   }
+  /* Pressed-in inner shadow (from the prior custom CSS) — the button reads as physically
+     depressed on tap, not just scaled. Primary/danger get a deeper inset over their colour;
+     the ghost button a lighter one over its surface. */
+  .btn-primary:active:not(:disabled),
+  .btn-danger:active:not(:disabled) {
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.22);
+  }
+  .btn-ghost:active:not(:disabled) {
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+  }
   .btn-primary:disabled, .btn-ghost:disabled, .btn-danger:disabled {
     opacity: 0.4;
     cursor: not-allowed;
