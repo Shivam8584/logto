@@ -81,7 +81,7 @@ const MfaFactorButton = ({ factor, isBinding, isDisabled, maskedIdentifier, onCl
         buttonBaseClass,
         'btn-ghost',
         'w-full',
-        'py-3 ps-3 pe-4 h-auto gap-4 rounded-[11px] border-line-strong',
+        'py-3.5 ps-3 pe-4 h-auto gap-4 rounded-[13px] border-line-strong',
         isDisabled && 'disabled cursor-not-allowed border-line bg-surface-2'
       )}
       type="button"

@@ -13,7 +13,12 @@ const Divider = ({ className, label }: Props) => {
 
   return (
     <div
-      className={classNames('flex items-center text-xs font-medium text-muted', className)}
+      // Lighter weight + slight transparency so the "or" reads as a quiet separator,
+      // not a heading (matches the refined custom CSS: 13px/400, subtle).
+      className={classNames(
+        'flex items-center text-[13px] font-normal text-muted opacity-90 [&>span]:px-1',
+        className
+      )}
     >
       <i className={lineStyle} />
       {label && (

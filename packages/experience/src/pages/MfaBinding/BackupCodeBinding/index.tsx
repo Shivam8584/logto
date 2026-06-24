@@ -39,7 +39,7 @@ const BackupCodeBinding = () => {
       description="mfa.save_backup_code_description"
     >
       <div className="flex flex-col justify-center items-stretch gap-4 pb-6">
-        <div className="grid grid-cols-2 p-4 text-sm font-medium text-center rounded-[13px] bg-surface text-ink gap-y-2 mobile:text-base">
+        <div className="grid grid-cols-2 p-4 text-sm font-medium text-center rounded-[13px] bg-surface-2 text-ink gap-y-2 mobile:text-base font-mono tracking-[0.02em] [font-variant-numeric:tabular-nums]">
           {codes.map((code) => (
             <span key={code}>{code}</span>
           ))}

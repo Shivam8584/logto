@@ -33,7 +33,9 @@ const Checkbox = ({ disabled, size = 'default', ...rest }: Props, ref: Ref<HTMLI
       <input type="checkbox" disabled={disabled} {...rest} ref={ref} readOnly />
       <CheckboxIcon
         className={classNames(
-          'icon me-2 w-[18px] h-[18px] mobile:w-[18px] mobile:h-[18px]',
+          // mt-px nudges the box to sit on the text baseline; transition smooths the
+          // check/border colour change (both from the refined custom CSS).
+          'icon me-2 mt-px shrink-0 w-[18px] h-[18px] mobile:w-[18px] mobile:h-[18px] [&_*]:transition-colors [&_*]:duration-150',
           size === 'small' && 'w-4 h-4 mobile:w-[18px] mobile:h-[18px]'
         )}
       />

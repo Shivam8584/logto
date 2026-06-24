@@ -27,7 +27,9 @@ const SecretSection = ({ secret, secretQrCode }: TotpBindingState) => {
     >
       <div className="flex flex-col items-center justify-center">
         {isQrCodeFormat && secretQrCode && (
-          <div className="border border-line-strong rounded-[13px] overflow-hidden m-4 h-[136px] w-[136px] bg-white p-1">
+          // Larger box + a white quiet-zone (p-3) around the QR — easier to scan and reads
+          // as a deliberate card, not a cramped thumbnail.
+          <div className="border border-line-strong rounded-[13px] overflow-hidden mx-auto my-4 h-[164px] w-[164px] bg-white p-3 shadow-[var(--sh-xs)]">
             <img className="w-full h-full block object-contain object-center" src={secretQrCode} alt="QR code" />
           </div>
         )}

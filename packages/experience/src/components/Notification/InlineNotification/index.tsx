@@ -12,7 +12,8 @@ const InlineNotification = ({ className, message }: Props) => {
   return (
     <div
       className={classNames(
-        'flex items-center p-3 text-sm mx-auto mb-2 surface-warning',
+        // 12px/14px padding + 16px bottom margin for proper breathing room (was p-3/mb-2).
+        'flex items-center px-3.5 py-3 text-sm mx-auto mb-4 surface-warning',
         className
       )}
     >
