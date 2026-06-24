@@ -9,8 +9,10 @@
 import { TextEncoder, TextDecoder } from 'node:util';
 
 if (typeof globalThis.TextEncoder === 'undefined') {
-  // eslint-disable-next-line @silverhand/fp/no-mutation
-  globalThis.TextEncoder = TextEncoder;
+  // `node:util`'s TextEncoder/TextDecoder are structurally compatible with the DOM lib's but
+  // not nominally identical, so cast through `unknown` when assigning to the globals.
+  // eslint-disable-next-line @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-member-access, no-restricted-syntax
+  (globalThis as { TextEncoder: unknown }).TextEncoder = TextEncoder;
   // eslint-disable-next-line @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-member-access, no-restricted-syntax
   (globalThis as { TextDecoder: unknown }).TextDecoder = TextDecoder;
 }

@@ -1,14 +1,15 @@
-import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import MembersBg from '@/assets/icons/members-bg.svg?url';
-import Button from '@/ds-components/Button';
+import { LinkButton } from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import DynamicT from '@/ds-components/DynamicT';
-import { openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import { getOssTenantMembersUpsellCopyKeys } from '../utils';
 
 import styles from './index.module.scss';
 
+// Hypedrive self-hosted — there is no Cloud "invite collaborator" backend, so instead of a
+// dead upsell we point admins at the native multi-admin path: create users and assign them an
+// admin role on the Users page. That is how self-hosted Logto supports multiple administrators.
 function Members() {
   const copyKeys = getOssTenantMembersUpsellCopyKeys();
 
@@ -24,16 +25,11 @@ function Members() {
             <DynamicT forKey={copyKeys.description} />
           </div>
         </div>
-        <Button
+        <LinkButton
           className={styles.action}
           type="primary"
           title={copyKeys.action}
-          trailingIcon={<ExternalLinkIcon />}
-          onClick={() => {
-            openCloudUpsell({
-              entry: ossUpsellEntries.tenantSettingsMembersOssUpsell,
-            });
-          }}
+          href="/users"
         />
       </div>
     </Card>

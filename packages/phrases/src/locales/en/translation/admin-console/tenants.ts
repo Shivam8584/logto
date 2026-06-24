@@ -12,10 +12,10 @@ const tenants = {
     billing_history: 'Billing history',
   },
   members: {
-    card_title: 'Manage tenants more securely with Logto Cloud',
+    card_title: 'Add admins and collaborators',
     card_description:
-      'Add admins or collaborators to your tenant without sharing a single admin account.',
-    card_action: 'Explore Logto Cloud',
+      'Give teammates their own admin access instead of sharing a single account. Create a user, then assign them an admin role — no shared password needed.',
+    card_action: 'Manage admin users',
   },
   settings: {
     title: 'SETTINGS',
