@@ -1,0 +1,116 @@
+# ==============================================================================
+# Logto — Hypedrive production deployment (Dokploy)
+# ==============================================================================
+# This compose lives IN the Logto fork repo alongside the code, so Dokploy can
+# connect to ONE repo (hypedrive-app/logto) and build the Dockerfile directly —
+# no separate logto-deploy repo, and no git-URL-inside-build-context (which
+# Dokploy cached, so pushes silently didn't rebuild). Dokploy does a fresh clone
+# on every deploy, so `build.context: .` always builds the latest commit.
+#
+# Dokploy config for this service:
+#   Source: GitHub → hypedrive-app/logto, branch `master`
+#   Compose Path: deploy/compose.yaml
+#   Env (POSTGRES_PASSWORD / ENDPOINT / ADMIN_ENDPOINT) set in Dokploy, not here.
+#   Domains: auth.hypedrive.app → app:3001, auth-admin.hypedrive.app → app:3002
+# ==============================================================================
+
+# Cap container stdout/stderr so a chatty or crash-looping service can't fill the
+# host disk (Docker's default json-file driver is unbounded). 20m × 5 = ~100 MB.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "20m"
+    max-file: "5"
+
+services:
+  app:
+    # Build the Dockerfile at the repo ROOT (context is this cloned repo). Native
+    # arm64 on the Dokploy host — no QEMU, no registry. Because Dokploy fresh-clones
+    # per deploy, `.` is always the just-pushed commit (the old git-URL context cached
+    # the branch ref and silently reused stale clones).
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        # Match the published image: OSS, dev-only features off.
+        - dev_features_enabled=false
+    pull_policy: build
+    image: hypedrive/logto:step-up
+    restart: unless-stopped
+    logging: *default-logging
+    # Logto's CLI seed (`-- --swe` = skip-when-exists) is the canonical migration
+    # runner and is idempotent across boots. `alteration deploy next` MUST run before
+    # `npm start`: this fork carries `next-*` schema alterations beyond the latest
+    # published tag; `deploy latest` would leave them undeployed and the boot
+    # precondition check would crash-loop. `next` is a superset of `latest`. CI=true
+    # keeps both non-interactive (no TTY prompt).
+    entrypoint: ["sh", "-c", "CI=true npm run cli db seed -- --swe && CI=true npm run alteration deploy next && npm start"]
+    environment:
+      # Mandatory behind Traefik — Logto reads X-Forwarded-* for correct redirect
+      # URIs and HTTPS detection.
+      TRUST_PROXY_HEADER: "1"
+      DB_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/logto
+      # Public OIDC issuer URL. Changing it after clients are registered breaks every
+      # issued token — pick once, keep forever.
+      ENDPOINT: ${ENDPOINT}
+      # Separate hostname for the admin console (internal port 3002). Unset disables it.
+      ADMIN_ENDPOINT: ${ADMIN_ENDPOINT}
+    expose:
+      - "3001"
+      - "3002"
+    # App-level healthcheck: probe the OIDC discovery doc (proves the full server
+    # booted, not just that the process is up) so Traefik never routes to an app that's
+    # crash-looping or mid-boot. wget ships in node:alpine (busybox). The long
+    # start_period covers the seed + alteration step before `npm start`.
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://localhost:3001/oidc/.well-known/openid-configuration >/dev/null 2>&1 || exit 1",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1024M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+
+  postgres:
+    image: postgres:17-alpine
+    user: postgres
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: logto
+    volumes:
+      - logto_pgdata:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d logto"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+volumes:
+  logto_pgdata:
