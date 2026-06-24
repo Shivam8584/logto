@@ -13,11 +13,21 @@ RUN npm add --location=global pnpm@^11.0.0
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
 RUN apk add --no-cache python3 make g++ rsync
 
-COPY . .
+### Fetch dependencies BEFORE copying source (Docker layer-cache optimization) ###
+# Copy ONLY the lockfile, then `pnpm fetch` downloads every dependency from it into the
+# store. This layer is cached and only re-runs when pnpm-lock.yaml changes — so a code
+# change (the common case) reuses the fetched deps instead of re-downloading them. This is
+# the pnpm-recommended pattern for Docker monorepos.
+COPY pnpm-lock.yaml ./
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store pnpm fetch
 
-### Install dependencies and build ###
-# Reuse the pnpm store between BuildKit runs to reduce duplicate downloads/writes.
-RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store pnpm i
+### Now copy the source and install from the fetched store ###
+COPY . .
+# --prefer-offline: install from the store fetched above, only hitting the network for
+# anything the fetch didn't cover (robust — strict --offline would fail the whole build on
+# a single missed package). --frozen-lockfile fails fast if the lockfile is out of sync.
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+  pnpm i --prefer-offline --frozen-lockfile
 
 ### Set if dev features enabled ###
 ARG dev_features_enabled
@@ -38,8 +48,9 @@ RUN pnpm cli connector link $ADDITIONAL_CONNECTOR_ARGS -p .
 
 ### Prune dependencies for production ###
 # Keep prune + production install in one layer to avoid extra transient disk usage.
+# --prefer-offline reuses the store already populated by `pnpm fetch` above (no re-download).
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-  rm -rf node_modules packages/**/node_modules && NODE_ENV=production pnpm i
+  rm -rf node_modules packages/**/node_modules && NODE_ENV=production pnpm i --prefer-offline
 
 ### Clean up ###
 RUN rm -rf .scripts pnpm-*.yaml packages/cloud
