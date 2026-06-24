@@ -2,8 +2,9 @@
  * Scope-level step-up ACR enforcement (Phase 3 — grant-time).
  *
  * These tests verify that setting `required_acr` on a scope (or `default_acr` on a resource)
- * causes the OIDC `refresh_token` grant to throw `InsufficientScope` when the session ACR is
- * below the requirement, and that the token IS issued once the session is elevated.
+ * causes the OIDC `refresh_token` grant to throw `InsufficientUserAuthentication` (HTTP 401,
+ * `error=insufficient_user_authentication` per RFC 9470 §3) when the session ACR is below the
+ * requirement, and that the token IS issued once the session is elevated.
  *
  * Coverage:
  *   1. Scope with `required_acr=mfa` → token blocked when session is `pwd`, passes after MFA.

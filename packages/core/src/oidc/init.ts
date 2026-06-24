@@ -46,6 +46,7 @@ import { i18next } from '#src/utils/i18n.js';
 import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 
+import { InsufficientUserAuthentication } from './acr-enforcement.js';
 import {
   appLevelAccessControlMetadataKey,
   assertUserHasApplicationAccessForOidc,
@@ -527,6 +528,45 @@ export default function initOidc(
 
   addOidcEventListeners(tenantId, oidc, queries);
   registerGrants(oidc, envSet, queries, libraries);
+
+  /**
+   * RFC 9470 §3 WWW-Authenticate challenge for step-up authentication failures.
+   *
+   * When a grant throws `InsufficientUserAuthentication`, oidc-provider will return the error
+   * as a JSON body (standard token-endpoint behaviour). This middleware additionally sets the
+   * `WWW-Authenticate: Bearer` header with `error`, `error_description`, `acr_values`, and
+   * (when present) `max_age` — the exact fields RFC 9470 Figure 2/3 require.
+   *
+   * Clients that follow RFC 9470 read the header to know which `acr_values` to include in
+   * the subsequent `/oidc/auth` request to re-authenticate at the required level.
+   */
+  oidc.use(async (ctx, next) => {
+    try {
+      await next();
+    } catch (error: unknown) {
+      if (error instanceof InsufficientUserAuthentication) {
+        // RFC 9470 §3 Figure 2/3: Bearer challenge with error, error_description, acr_values,
+        // and optionally max_age. Build as a typed Record to avoid unsafe `any` spreads.
+        const challengeParams: Record<string, string> = {
+          error: 'insufficient_user_authentication',
+          /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */
+          error_description: error.error_description || 'A higher authentication level is required',
+          acr_values: error.acr_values,
+        };
+
+        const wwwAuth = [
+          ...Object.entries(challengeParams),
+          ...(error.max_age === undefined ? [] : ([['max_age', String(error.max_age)]] as const)),
+        ]
+          .map(([key, value]) => `${key}="${value.replaceAll('"', '\\"')}"`)
+          .join(', ');
+
+        ctx.set('WWW-Authenticate', `Bearer ${wwwAuth}`);
+      }
+
+      throw error;
+    }
+  });
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
