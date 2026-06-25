@@ -110,8 +110,9 @@ overrides:
   'vite@<=6.4.2': '^6.4.3'
   # Pin vite to a single exact version so dependency upgrades (`pnpm update <pkg>`)
   # cannot pull a second vite minor into the tree — a second vite changed the
-  # CJS/sass interop resolution and caused build/runtime regressions.
-  'vite@8': '8.0.16'
+  # CJS/sass interop resolution and caused build/runtime regressions. The bare
+  # `vite` key forces every requested vite range to resolve to this exact version.
+  vite: 8.0.16
   'ws@>=7.0.0 <7.5.11': '^7.5.11'
   'ws@>=8.0.0 <8.21.0': '^8.21.0'
   'yaml@>=2.0.0 <2.8.3': '^2.8.3'
