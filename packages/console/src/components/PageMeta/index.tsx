@@ -1,5 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 
 type Props = {

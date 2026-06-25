@@ -6,7 +6,7 @@ import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import i18next from 'i18next';
 import { useContext } from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 

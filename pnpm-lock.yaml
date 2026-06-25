@@ -234,9 +234,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      '@types/react-helmet':
-        specifier: ^6.1.6
-        version: 6.1.6
       '@types/react-modal':
         specifier: ^3.13.1
         version: 3.13.1
@@ -309,9 +306,6 @@ importers:
       react-easy-crop:
         specifier: ^5.5.7
         version: 5.5.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-helmet:
-        specifier: ^6.1.0
-        version: 6.1.0(react@18.3.1)
       react-helmet-async:
         specifier: ^3.0.0
         version: 3.0.0(react@18.3.1)
@@ -3892,9 +3886,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      '@types/react-helmet':
-        specifier: ^6.1.6
-        version: 6.1.6
       '@types/react-modal':
         specifier: ^3.13.1
         version: 3.13.1
@@ -4027,9 +4018,9 @@ importers:
       react-dropzone:
         specifier: ^14.2.3
         version: 14.2.3(react@18.3.1)
-      react-helmet:
-        specifier: ^6.1.0
-        version: 6.1.0(react@18.3.1)
+      react-helmet-async:
+        specifier: ^3.0.0
+        version: 3.0.0(react@18.3.1)
       react-hook-form:
         specifier: ^7.80.0
         version: 7.80.0(react@18.3.1)
@@ -4490,9 +4481,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      '@types/react-helmet':
-        specifier: ^6.1.6
-        version: 6.1.6
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.0.2(vite@8.0.16(@types/node@24.13.2)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.77.8)(yaml@2.8.4))
@@ -4520,9 +4508,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
-      react-helmet:
-        specifier: ^6.1.0
-        version: 6.1.0(react@18.3.1)
+      react-helmet-async:
+        specifier: ^3.0.0
+        version: 3.0.0(react@18.3.1)
       react-i18next:
         specifier: ^12.3.1
         version: 12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

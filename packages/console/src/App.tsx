@@ -9,7 +9,7 @@ import {
 import { conditionalArray } from '@silverhand/essentials';
 import { PostHogProvider, usePostHog } from 'posthog-js/react';
 import { useContext, useEffect, useMemo } from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import 'overlayscrollbars/overlayscrollbars.css';
@@ -106,31 +106,35 @@ function Providers() {
   );
 
   const appTree = (
-    <LogtoProvider
-      unstable_enableCache
-      config={{
-        endpoint: adminTenantEndpoint.href,
-        appId: adminConsoleApplicationId,
-        resources,
-        scopes,
-        prompt: [Prompt.Login, Prompt.Consent],
-      }}
-    >
-      <AppThemeProvider>
-        <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
-        <Toast />
-        <AppConfirmModalProvider>
-          <ErrorBoundary>
-            <LogtoErrorBoundary>
-              <AppDataProvider>
-                <GlobalScripts />
-                <Content />
-              </AppDataProvider>
-            </LogtoErrorBoundary>
-          </ErrorBoundary>
-        </AppConfirmModalProvider>
-      </AppThemeProvider>
-    </LogtoProvider>
+    // `react-helmet-async` requires a provider at the root to collect head tags
+    // (the maintained, ESM replacement for the unmaintained `react-helmet`).
+    <HelmetProvider>
+      <LogtoProvider
+        unstable_enableCache
+        config={{
+          endpoint: adminTenantEndpoint.href,
+          appId: adminConsoleApplicationId,
+          resources,
+          scopes,
+          prompt: [Prompt.Login, Prompt.Consent],
+        }}
+      >
+        <AppThemeProvider>
+          <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
+          <Toast />
+          <AppConfirmModalProvider>
+            <ErrorBoundary>
+              <LogtoErrorBoundary>
+                <AppDataProvider>
+                  <GlobalScripts />
+                  <Content />
+                </AppDataProvider>
+              </LogtoErrorBoundary>
+            </ErrorBoundary>
+          </AppConfirmModalProvider>
+        </AppThemeProvider>
+      </LogtoProvider>
+    </HelmetProvider>
   );
 
   // Only mount PostHogProvider when an API key is configured (cloud analytics).

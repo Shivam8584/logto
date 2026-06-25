@@ -2,7 +2,7 @@ import { type IdTokenClaims, LogtoProvider, useLogto, type Prompt } from '@logto
 import { demoAppApplicationId } from '@logto/schemas';
 import i18next from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 
 import '@/scss/normalized.scss';
@@ -201,19 +201,23 @@ const App = () => {
   const config = getLocalData('config');
 
   return (
-    <LogtoProvider
-      config={{
-        endpoint: window.location.origin,
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- We need to fall back for empty string
-        appId: params.get('app_id') || config.appId || demoAppApplicationId,
-        // eslint-disable-next-line no-restricted-syntax
-        prompt: config.prompt ? (config.prompt.split(' ') as Prompt[]) : [],
-        scopes: config.scope ? config.scope.split(' ') : [],
-        resources: config.resource ? config.resource.split(' ') : [],
-      }}
-    >
-      <Main />
-    </LogtoProvider>
+    // `react-helmet-async` requires a provider at the root to collect head tags
+    // (the maintained, ESM replacement for the unmaintained `react-helmet`).
+    <HelmetProvider>
+      <LogtoProvider
+        config={{
+          endpoint: window.location.origin,
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- We need to fall back for empty string
+          appId: params.get('app_id') || config.appId || demoAppApplicationId,
+          // eslint-disable-next-line no-restricted-syntax
+          prompt: config.prompt ? (config.prompt.split(' ') as Prompt[]) : [],
+          scopes: config.scope ? config.scope.split(' ') : [],
+          resources: config.resource ? config.resource.split(' ') : [],
+        }}
+      >
+        <Main />
+      </LogtoProvider>
+    </HelmetProvider>
   );
 };
 
