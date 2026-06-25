@@ -88,7 +88,11 @@ function BasicWebhookForm() {
             <CategorizedCheckboxGroup value={value} groups={hookEventGroups} onChange={onChange} />
           )}
         />
-        {errors.events && <div className={styles.errorMessage}>{errors.events.message}</div>}
+        {errors.events && (
+          <div role="alert" className={styles.errorMessage}>
+            {errors.events.message}
+          </div>
+        )}
       </FormField>
     </>
   );

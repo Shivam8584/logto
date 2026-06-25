@@ -73,7 +73,7 @@ function WebhookLogs() {
       }
       columns={[
         {
-          title: 'Status',
+          title: t('webhook_details.log_status'),
           dataIndex: 'status',
           colSpan: 5,
           render: ({ payload }) => {

@@ -9,6 +9,7 @@ import BuildingIcon from '@/assets/icons/building.svg?react';
 import PizzaIcon from '@/assets/icons/pizza.svg?react';
 import Logo from '@/assets/images/logo.svg?react';
 import ActionBar from '@/components/ActionBar';
+import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Button from '@/ds-components/Button';
@@ -86,7 +87,7 @@ function OssOnboarding() {
   );
 
   if (isLoading) {
-    return null;
+    return <AppLoading />;
   }
 
   if (isOnboardingDone) {

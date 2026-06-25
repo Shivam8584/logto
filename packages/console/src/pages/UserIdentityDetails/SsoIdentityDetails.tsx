@@ -73,7 +73,7 @@ function SsoIdentityDetails() {
           }
           subtitle={getUserSubtitle(userData)}
           identifier={{
-            name: 'Enterprise SSO identity ID',
+            name: t('user_identity_details.sso_account.identity_id'),
             value: ssoIdentityData.ssoIdentity.identityId,
           }}
         />

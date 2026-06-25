@@ -203,7 +203,11 @@ function CreateForm({ onClose, onCreate }: Props) {
             />
           </FormField>
         </form>
-        {missingIdentifierError && <div className={styles.error}>{missingIdentifierError}</div>}
+        {missingIdentifierError && (
+          <div role="alert" className={styles.error}>
+            {missingIdentifierError}
+          </div>
+        )}
       </ModalLayout>
     </Modal>
   );

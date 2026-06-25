@@ -130,7 +130,7 @@ function WebhookDetails() {
                   )
                 : t('webhook_details.not_in_use')
             }
-            identifier={{ name: 'ID', value: data.id }}
+            identifier={{ name: t('webhook_details.webhook_id'), value: data.id }}
             actionMenuItems={[
               {
                 title: `webhook_details.${isEnabled ? 'disable' : 'reactivate'}_webhook`,

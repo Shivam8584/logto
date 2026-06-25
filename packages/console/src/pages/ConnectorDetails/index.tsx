@@ -36,7 +36,6 @@ import ConnectorTypeName from './ConnectorTypeName';
 import EmailUsage from './EmailUsage';
 import styles from './index.module.scss';
 
-// TODO: refactor path-related operation utils in both Connectors and ConnectorDetails page
 const getConnectorsPathname = (isSocial: boolean) =>
   `/connectors/${isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}`;
 

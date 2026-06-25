@@ -1,5 +1,7 @@
 const webhook_details = {
   page_title: 'Webhook details',
+  webhook_id: 'Webhook ID',
+  log_status: 'Status',
   back_to_webhooks: 'Back to webhooks',
   not_in_use: 'Not in use',
   success_rate: 'success rate',
@@ -25,6 +27,7 @@ const webhook_details = {
     name: 'Name',
     endpoint_url: 'Endpoint URL',
     signing_key: 'Signing key',
+    generating_signing_key: 'Generating signing key…',
     signing_key_tip:
       'Add the secret key provided by Hypedrive to your endpoint as a request header to ensure the authenticity of the webhook’s payload.',
     regenerate: 'Regenerate',

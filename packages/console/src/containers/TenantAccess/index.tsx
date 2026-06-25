@@ -5,6 +5,7 @@ import { useSWRConfig } from 'swr';
 
 // Used in the docs
 
+import AppLoading from '@/components/AppLoading';
 import { isCloud } from '@/consts/env';
 import { reservedTenantIdWildcard, TenantsContext } from '@/contexts/TenantsProvider';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
@@ -92,7 +93,7 @@ export default function TenantAccess() {
   }, [currentTenant, currentTenantId, isAuthenticated, pathname, defaultTenantId]);
 
   if (!isCacheCleared) {
-    return null;
+    return <AppLoading />;
   }
 
   return <Outlet />;

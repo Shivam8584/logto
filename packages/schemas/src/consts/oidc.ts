@@ -33,52 +33,6 @@ export const LogtoAcrValues = Object.freeze({
 
 export type LogtoAcrValue = (typeof LogtoAcrValues)[keyof typeof LogtoAcrValues];
 
-/**
- * The assurance ranking of each built-in ACR, from weakest to strongest.
- *
- * Step-up enforcement is a *total order* comparison: "is the session's ACR at least
- * as strong as the one required by the requested scope?". This map gives every ACR a
- * comparable rank so the entire codebase shares one definition of "stronger than".
- *
- * An unknown / absent ACR ranks as `-1` (weaker than the `pwd` baseline), so it never
- * accidentally satisfies a requirement.
- */
-const acrRankMap: Readonly<Record<LogtoAcrValue, number>> = Object.freeze({
-  [LogtoAcrValues.Password]: 0,
-  [LogtoAcrValues.Mfa]: 1,
-  [LogtoAcrValues.PhishingResistant]: 2,
-});
-
-/** Type guard narrowing an arbitrary string to a recognized built-in ACR value. */
-export const isLogtoAcrValue = (acr?: string): acr is LogtoAcrValue =>
-  acr !== undefined && acr in acrRankMap;
-
-/**
- * Rank of an ACR value for total-order comparison. Unknown / undefined ACRs rank `-1`
- * so they are always weaker than the `pwd` baseline and never satisfy a requirement.
- */
-export const acrRank = (acr?: string): number => (isLogtoAcrValue(acr) ? acrRankMap[acr] : -1);
-
-/**
- * Whether a session's ACR is strong enough to satisfy a required ACR (rank comparison only;
- * freshness / `auth_time` is enforced separately by the token-issuance layer).
- */
-export const acrSatisfies = (sessionAcr: string | undefined, requiredAcr: string): boolean =>
-  acrRank(sessionAcr) >= acrRank(requiredAcr);
-
-/**
- * The strongest ACR among the given values (the `max` of the ladder), or `undefined` when
- * none are recognized. Used by the resolver to combine scope / resource / app / org
- * requirements into a single effective requirement.
- */
-export const acrMax = (...acrs: Array<string | undefined>): LogtoAcrValue | undefined => {
-  const known = acrs.filter((acr) => isLogtoAcrValue(acr));
-
-  return known.length === 0
-    ? undefined
-    : known.reduce((best, acr) => (acrRank(acr) > acrRank(best) ? acr : best));
-};
-
 export const oidcRoutes = Object.freeze({
   codeVerification: '/oidc/device',
 } as const);

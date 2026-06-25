@@ -63,7 +63,7 @@ function Members() {
           onChange: setPage,
         }}
         isLoading={isLoading}
-        errorMessage={error?.toString()}
+        errorMessage={error?.body?.message ?? error?.message}
         rowGroups={[{ key: 'data', data }]}
         columns={[
           {

@@ -94,7 +94,10 @@ function SocialIdentityDetails() {
           icon={<UserAvatar user={userData} size="xlarge" />}
           title={<PageTitle user={userData} connector={connector} />}
           subtitle={getUserSubtitle(userData)}
-          identifier={{ name: 'Social identity ID', value: socialIdentityData.identity.userId }}
+          identifier={{
+            name: t('user_identity_details.social_account.identity_id'),
+            value: socialIdentityData.identity.userId,
+          }}
           actionMenuItems={[
             {
               title: 'user_identity_details.delete_identity',

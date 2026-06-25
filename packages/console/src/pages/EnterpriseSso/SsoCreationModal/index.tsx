@@ -23,6 +23,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
@@ -211,7 +212,11 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
         onClose={onClose}
       >
         {isLoading && <Skeleton numberOfLoadingConnectors={2} />}
-        {error?.message}
+        {error && (
+          <InlineNotification severity="error">
+            {error.body?.message ?? error.message}
+          </InlineNotification>
+        )}
         <SsoConnectorRadioGroup
           name="enterpriseProviders"
           value={selectedProviderName}

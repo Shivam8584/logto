@@ -109,7 +109,7 @@ function UserDetails() {
             title={getUserTitle(data)}
             subtitle={userSubtitle}
             primaryTag={isSuspendedUser && <SuspendedTag />}
-            identifier={{ name: 'User ID', value: data.id }}
+            identifier={{ name: t('user_details.connectors.user_id'), value: data.id }}
             actionMenuItems={[
               {
                 title: isSuspendedUser

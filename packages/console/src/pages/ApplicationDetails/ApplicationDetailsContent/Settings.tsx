@@ -1,6 +1,6 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import type { Application } from '@logto/schemas';
-import { ApplicationType, CustomClientMetadataKey, LogtoAcrValues } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { isJsonObject } from '@/utils/json';
 
+import DefaultAcrValuesField from './DefaultAcrValuesField';
 import ProtectedAppSettings from './ProtectedAppSettings';
 import styles from './index.module.scss';
 import { type ApplicationForm } from './utils';
@@ -269,23 +270,7 @@ function Settings({ data }: Props) {
           )}
         />
       )}
-      {showRedirectUriFields && (
-        <Controller
-          name={`customClientMetadata.${CustomClientMetadataKey.DefaultAcrValues}`}
-          control={control}
-          defaultValue={[]}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <MultiTextInputField
-              title="application_details.default_acr_values"
-              tip={t('application_details.default_acr_values_tip')}
-              value={value ?? []}
-              error={convertRhfErrorMessage(error?.message)}
-              placeholder={LogtoAcrValues.Mfa}
-              onChange={onChange}
-            />
-          )}
-        />
-      )}
+      {showRedirectUriFields && <DefaultAcrValuesField />}
       <Controller
         name="customData"
         control={control}

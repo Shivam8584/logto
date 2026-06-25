@@ -7,7 +7,6 @@ export * from './interactions.js';
 export * from './search.js';
 export * from './resource.js';
 export * from './scope.js';
-export * from './acr.js';
 export * from './role.js';
 export * from './verification-code.js';
 export * from './application.js';

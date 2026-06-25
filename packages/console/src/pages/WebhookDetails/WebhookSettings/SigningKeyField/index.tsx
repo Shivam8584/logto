@@ -11,6 +11,7 @@ import ConfirmModal from '@/ds-components/ConfirmModal';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
+import { Ring as Spinner } from '@/ds-components/Spinner';
 import useApi from '@/hooks/use-api';
 
 import styles from './index.module.scss';
@@ -63,22 +64,33 @@ function SigningKeyField({ hookId, signingKey, onSigningKeyUpdated }: Props) {
         </>
       }
     >
-      <CopyToClipboard
-        hasVisibilityToggle
-        value={signingKey}
-        variant="border"
-        className={styles.signingKeyField}
-      />
-      <Button
-        type="text"
-        size="small"
-        icon={<Redo />}
-        title="webhook_details.settings.regenerate"
-        className={styles.regenerateButton}
-        onClick={() => {
-          setIsRegenerateFormOpen(true);
-        }}
-      />
+      {signingKey ? (
+        <CopyToClipboard
+          hasVisibilityToggle
+          value={signingKey}
+          variant="border"
+          className={styles.signingKeyField}
+        />
+      ) : (
+        // The key is generated on first mount when missing; show progress instead of an
+        // empty copy field so the auto-generation isn't a silent, invisible side effect.
+        <div className={styles.generating}>
+          <Spinner />
+          <DynamicT forKey="webhook_details.settings.generating_signing_key" />
+        </div>
+      )}
+      {Boolean(signingKey) && (
+        <Button
+          type="text"
+          size="small"
+          icon={<Redo />}
+          title="webhook_details.settings.regenerate"
+          className={styles.regenerateButton}
+          onClick={() => {
+            setIsRegenerateFormOpen(true);
+          }}
+        />
+      )}
       <ConfirmModal
         isOpen={isRegenerateFormOpen}
         isLoading={isRegenerating}

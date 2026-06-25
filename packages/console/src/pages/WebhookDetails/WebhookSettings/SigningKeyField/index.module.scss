@@ -7,3 +7,11 @@
 .signingKeyField {
   width: 100%;
 }
+
+.generating {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  color: var(--color-text-secondary);
+  font: var(--font-body-2);
+}
