@@ -3880,9 +3880,6 @@ importers:
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
-      '@types/react-color':
-        specifier: ^3.0.6
-        version: 3.0.6
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
@@ -3982,9 +3979,6 @@ importers:
       prism-react-renderer:
         specifier: ^2.4.1
         version: 2.4.1(react@18.3.1)
-      prop-types:
-        specifier: ^15.8.1
-        version: 15.8.1
       property-information:
         specifier: ^6.2.0
         version: 6.2.0
