@@ -21,6 +21,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
+          pnpm-version: 11
           node-version: ^24.0.0
 
       - name: Sync connector presets
@@ -42,6 +43,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
+          pnpm-version: 11
           node-version: ^24.0.0
 
       - name: Build
@@ -56,6 +58,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
+          pnpm-version: 11
           node-version: ^24.0.0
 
       - name: Prepack
@@ -73,6 +76,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
+          pnpm-version: 11
           node-version: ^24.0.0
 
       - name: Prepack
@@ -93,6 +97,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
+          pnpm-version: 11
           node-version: ^24.0.0
 
       - name: Build for test
@@ -164,6 +169,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
+          pnpm-version: 11
           node-version: ^24.0.0
           run-install: false
 
