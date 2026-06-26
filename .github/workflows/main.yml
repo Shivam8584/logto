@@ -180,11 +180,15 @@ jobs:
 
       - name: Prepack alteration
         working-directory: ./alteration
-        # The alteration tree is an old release tag whose package.json may pin an
-        # engines range the current runner's pnpm/Node no longer satisfies. Relax
-        # the engine check for this historical install only; the fresh tree above
-        # is current HEAD and stays strict.
-        run: pnpm i --config.engine-strict=false && pnpm prepack
+        # The alteration tree is an old release tag whose package.json pins an
+        # engines range (e.g. `pnpm: ^9 || ^10`) the current runner's pnpm 11 no
+        # longer satisfies. Relax the engine check for this historical install
+        # only; the fresh tree above is current HEAD and stays strict.
+        # NB: the `--config.engine-strict=false` CLI flag is unreliable under
+        # pnpm 11 — the npm-config env var is the form pnpm honours.
+        env:
+          npm_config_engine_strict: 'false'
+        run: pnpm i && pnpm prepack
       # ** End **
 
       - name: Setup Postgres
