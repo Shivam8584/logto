@@ -99,6 +99,19 @@
       fill: var(--color-neutral-variant-50);
     }
   }
+
+  .label {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  // On phones the Docs/Help/Version controls collapse to icon-only so the row
+  // (hamburger + logo + title + these + user menu) stops overflowing.
+  @media screen and (max-width: 640px) {
+    .label {
+      display: none;
+    }
+  }
 }
 
 .newVersionDot {

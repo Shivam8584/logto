@@ -19,10 +19,16 @@
     background-image: url('../../assets/images/welcome-dark.svg');
   }
 
-  @media screen and (max-width: 640px) {
-    // The decorative right-bottom artwork assumes a wide canvas; on phones we
-    // drop the fixed min-width and let the content stack fluidly.
+  // The decorative right-bottom artwork assumes a wide canvas, but a hard 1280px
+  // min-width forces a horizontal scrollbar on every tablet/laptop below it. Drop
+  // the fixed min-width once the viewport is narrower than the artwork's canvas and
+  // let the content flow fluidly.
+  @media screen and (max-width: 1280px) {
     min-width: 100%;
+    overflow-x: auto;
+  }
+
+  @media screen and (max-width: 640px) {
     min-height: 100%;
     overflow-y: auto;
     background-size: cover;

@@ -16,6 +16,28 @@
   // Allow the title block and the primary action button to wrap onto separate
   // lines on narrow viewports instead of overflowing the page width.
   flex-wrap: wrap;
+
+  // Standardise the wrapped state across every list page: the title block claims
+  // the full row, and the primary action (button/link) drops to its own full-width
+  // line below it instead of floating at an awkward natural width. Tighter gap so
+  // the two stacked rows don't look detached.
+  @media screen and (max-width: 640px) {
+    gap: _.unit(4);
+
+    > :first-child {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+
+    // The primary action — a <Button> or an <a>/link — spans the row when stacked
+    // so every list page's header looks identical on phones.
+    > button,
+    > a,
+    > :last-child:not(:first-child) {
+      flex: 1 1 100%;
+      width: 100%;
+    }
+  }
 }
 
 .table {

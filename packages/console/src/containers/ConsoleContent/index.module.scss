@@ -23,6 +23,13 @@
     padding-inline: _.unit(4);
   }
 
+  // On phones pull the gutters and bottom padding in further so the dashboard
+  // shell's content fills the narrow viewport consistently with the topbar.
+  @media screen and (max-width: 640px) {
+    padding-block: _.unit(3) _.unit(6);
+    padding-inline: _.unit(3);
+  }
+
   > :not(svg) {
     @include _.main-content-width;
   }

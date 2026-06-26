@@ -43,7 +43,9 @@
         align-self: flex-start;
       }
 
-      @media screen and (max-width: 640px) {
+      // Each column wants 510px; two side-by-side need >1060px once the gap and page
+      // gutters are counted, so we stack before the tablet range overflows.
+      @media screen and (max-width: 960px) {
         flex-direction: column;
 
         > * {
