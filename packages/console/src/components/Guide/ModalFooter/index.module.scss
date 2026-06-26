@@ -9,6 +9,12 @@
   box-shadow: var(--shadow-3);
   @include _.z-index(front);
 
+  // On phones collapse the generous inline padding so the text + button row
+  // never forces the footer wider than the viewport.
+  @media screen and (max-width: 640px) {
+    padding: _.unit(4);
+  }
+
   .wrapper {
     display: flex;
     align-items: center;
@@ -16,6 +22,11 @@
     max-width: dim.$guide-main-content-max-width;
     margin: 0 auto;
     gap: _.unit(3);
+
+    // Keep the action button intact and let the text take the remaining space.
+    > button {
+      flex-shrink: 0;
+    }
   }
 
   .text {

@@ -38,6 +38,28 @@
   }
 }
 
+@media screen and (max-width: 640px) {
+  .step {
+    .header {
+      .title {
+        margin-inline-start: _.unit(3);
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+    }
+
+    .contentContainer {
+      padding-inline: _.unit(5) 0;
+    }
+
+    &:not(:last-child) {
+      .contentContainer::before {
+        transform: translateX(_.unit(-2.5));
+      }
+    }
+  }
+}
+
 .stepIcon {
   display: flex;
   align-items: center;

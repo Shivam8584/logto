@@ -13,6 +13,22 @@
     .createButton {
       margin-inline-start: _.unit(2);
     }
+
+    // On phones the search box and the create button can't share one row;
+    // wrap them and let each take the full width.
+    @media screen and (max-width: 640px) {
+      flex-wrap: wrap;
+      gap: _.unit(2);
+
+      > *:first-child {
+        flex: 1 1 100%;
+      }
+
+      .createButton {
+        flex: 1 1 100%;
+        margin-inline-start: 0;
+      }
+    }
   }
 
   .description {

@@ -34,3 +34,15 @@
 .body {
   width: 100%;
 }
+
+@media screen and (max-width: 640px) {
+  .row {
+    flex-wrap: wrap;
+    gap: _.unit(2);
+
+    > td,
+    th {
+      width: 100%;
+    }
+  }
+}

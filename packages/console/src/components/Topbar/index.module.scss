@@ -14,6 +14,15 @@
     gap: _.unit(2);
   }
 
+  // The logo is itself the Hypedrive wordmark, so on phones drop the redundant
+  // title text + divider — together ~120px that otherwise overflow the 64px row.
+  @media screen and (max-width: 640px) {
+    .line,
+    .text {
+      display: none;
+    }
+  }
+
   // Hamburger that opens the mobile sidebar drawer. Hidden on desktop, where the
   // sidebar is permanently visible.
   .menuButton {
@@ -29,6 +38,7 @@
     background: none;
     color: var(--color-text);
     cursor: pointer;
+    flex-shrink: 0;
 
     &:hover {
       background: var(--color-hover);
@@ -42,6 +52,7 @@
   .logo {
     width: auto;
     height: 28px;
+    flex-shrink: 0;
     color: var(--color-text);
     cursor: pointer;
   }
@@ -60,6 +71,7 @@
 .button {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   padding: _.unit(1);
   border-radius: var(--radius-md);
   border: none;

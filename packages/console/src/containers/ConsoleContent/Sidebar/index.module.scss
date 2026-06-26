@@ -83,4 +83,15 @@
   width: 248px;
   height: 100%;
   @include _.shimmering-animation;
+
+  // Mirror the real sidebar's responsive behavior so the lazy-load fallback never
+  // renders as a fixed 248px in-flow column (which on phones stole the content's
+  // width and forced horizontal scroll).
+  @media screen and (max-width: 960px) {
+    width: 216px;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 }

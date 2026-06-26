@@ -20,6 +20,12 @@
     transform: translateY(100%);
     transition: transform 0.3s ease-out;
     gap: _.unit(3);
+
+    // On phones collapse the generous inline padding so the discard + save
+    // buttons stay on one row without overflowing the viewport.
+    @media screen and (max-width: 640px) {
+      padding: _.unit(3) _.unit(4);
+    }
   }
 
   &.active {
