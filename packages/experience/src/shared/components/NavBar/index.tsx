@@ -75,6 +75,9 @@ const NavBar = ({ title, type = 'back', isHidden, onClose, onBack, onSkip }: Pro
       <div
         role="button"
         tabIndex={0}
+        // The visible "Back" label is hidden on mobile (and the close variant is
+        // always icon-only), so expose an accessible name for screen readers.
+        aria-label={String(t(isClosable ? 'action.cancel' : 'action.nav_back'))}
         className={navButtonClass}
         onKeyDown={onKeyDownHandler(clickHandler)}
         onClick={clickHandler}
@@ -88,7 +91,11 @@ const NavBar = ({ title, type = 'back', isHidden, onClose, onBack, onSkip }: Pro
         )}
         {!isClosable && <span>{t('action.nav_back')}</span>}
       </div>
-      {title && <div className="navBarTitle truncate max-w-[60%] mx-auto">{title}</div>}
+      {title && (
+        <div className="navBarTitle truncate max-w-[60%] mx-auto" title={title}>
+          {title}
+        </div>
+      )}
       {onSkip && (
         <div
           role="button"

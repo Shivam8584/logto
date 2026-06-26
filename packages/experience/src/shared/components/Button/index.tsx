@@ -75,7 +75,9 @@ const Button = ({
         >
           {isLoadingActive ? <RotatingRingIcon /> : icon}
         </span>
-        <DynamicT forKey={title} interpolation={i18nProps} />
+        <span className="truncate">
+          <DynamicT forKey={title} interpolation={i18nProps} />
+        </span>
       </span>
     </button>
   );

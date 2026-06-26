@@ -55,7 +55,7 @@ const SecondaryPageLayout = ({
             <DynamicT forKey={title} interpolation={titleProps} />
           </div>
           {description && (
-            <div className="mt-2 text-sm text-muted">
+            <div className="mt-2 text-sm text-muted [overflow-wrap:anywhere]">
               {typeof description === 'string' ? (
                 <DynamicT forKey={description} interpolation={descriptionProps} />
               ) : (

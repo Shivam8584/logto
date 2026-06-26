@@ -47,7 +47,9 @@ const OrganizationItem = ({
       ) : (
         <OrganizationIcon className="w-5 h-5 text-muted me-2 group-data-[selected=true]:text-primary" />
       )}
-      <div className="text-sm flex-1">{organization.name}</div>
+      <div className="text-sm flex-1 min-w-0 truncate" title={organization.name}>
+        {organization.name}
+      </div>
       {suffixElement}
     </div>
   );

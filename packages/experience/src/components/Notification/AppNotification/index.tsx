@@ -26,7 +26,7 @@ const AppNotification = forwardRef(
         style={style}
       >
         <InformationCircleIcon className="w-5 h-5 me-3 text-muted" />
-        <div className="flex-1 me-4">{message}</div>
+        <div className="flex-1 min-w-0 me-4 [overflow-wrap:anywhere]">{message}</div>
         <TextLink text="action.got_it" className="max-w-[20%]" onClick={onClose} />
       </div>
     );

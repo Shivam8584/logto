@@ -31,7 +31,9 @@ const ScopeGroup = ({ groupName, scopes, isAutoExpand = false }: ScopeGroupProps
         onKeyDown={onKeyDownHandler(toggle)}
       >
         <CheckIcon className="text-success w-5 h-5 me-2" />
-        <div className="text-sm flex-1 me-2">{groupName}</div>
+        <div className="text-sm flex-1 min-w-0 truncate me-2" title={groupName}>
+          {groupName}
+        </div>
         <ChevronDownIcon
           className="transition-transform duration-200 ease-in-out relative w-5 h-5 text-muted data-[expanded=true]:rotate-180"
           data-expanded={expanded}

@@ -29,22 +29,25 @@ export class LogtoIdentityInfo extends LitElement {
 
     .info {
       flex: 1;
+      min-width: 0;
+      display: flex;
       flex-direction: column;
+
+      .name,
+      .email {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
       .name {
         font: var(--logto-identity-info-name-font-size, var(--logto-font-body-md));
-        color: var(
-          --logto-identity-info-name-color,
-          var(--logto-color---logto-color-typeface-primary)
-        );
+        color: var(--logto-identity-info-name-color, var(--logto-color-typeface-primary));
       }
 
       .email {
         font: var(--logto-identity-info-email-font, var(--logto-font-body-sm));
-        color: var(
-          --logto-identity-info-email-color,
-          var(--logto-color---logto-color-typeface-primary)
-        );
+        color: var(--logto-identity-info-email-color, var(--logto-color-typeface-secondary));
       }
     }
   `;

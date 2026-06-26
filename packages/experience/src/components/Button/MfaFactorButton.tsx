@@ -89,11 +89,11 @@ const MfaFactorButton = ({ factor, isBinding, isDisabled, maskedIdentifier, onCl
       onClick={isDisabled ? undefined : onClick}
     >
       <Icon className="w-5 h-5 text-muted" />
-      <div className="flex-1 flex flex-col items-start text-start">
+      <div className="flex-1 min-w-0 flex flex-col items-start text-start">
         <div className="text-base font-medium text-ink desktop:text-sm">
           <DynamicT forKey={factorName[factor]} />
         </div>
-        <div className="text-sm text-muted">
+        <div className="text-sm text-muted [overflow-wrap:anywhere]">
           {maskedIdentifier ? (
             <span>{getDescriptionForMaskedIdentifier()}</span>
           ) : (

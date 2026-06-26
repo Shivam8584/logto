@@ -39,6 +39,7 @@ export class LogtoProfileItem extends LitElement {
 
     .label {
       flex: 1;
+      min-width: 0;
       display: flex;
       align-items: center;
       gap: var(--logto-profile-item-label-gap, var(--logto-spacing-sm));
@@ -59,8 +60,11 @@ export class LogtoProfileItem extends LitElement {
     slot[name='content'] {
       display: flex;
       flex: 2;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font: var(--logto-profile-item-value-font, var(--logto-font-body-md));
-      color: var(--logto-profile-item--color, var(--logto-color-typeface-primary));
+      color: var(--logto-profile-item-value-color, var(--logto-color-typeface-primary));
     }
 
     .no-value {

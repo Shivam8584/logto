@@ -217,7 +217,7 @@ const PasskeyView = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex gap-4 shrink-0 ml-4">
+                  <div className="flex gap-4 shrink-0 ms-4">
                     <button
                       type="button"
                       className="[all:unset] text-sm font-medium text-primary cursor-pointer whitespace-nowrap hover:text-ink"

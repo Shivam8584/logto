@@ -93,7 +93,7 @@ const PasskeySetup = () => {
           className="my-4"
           title="passkey_sign_in.setup_page.subtitle"
           isLoading={isSubmitting}
-          disabled={!registrationResult}
+          isDisabled={!registrationResult}
           onClick={onCreatePasskey}
         />
       </SectionLayout>

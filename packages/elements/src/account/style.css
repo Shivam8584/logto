@@ -25,3 +25,14 @@
   --logto-font-body-md: 400 14px/20px 'SF Pro Text', sans-serif;
   --logto-font-body-sm: 400 12px/16px 'SF Pro Text', sans-serif;
 }
+
+/* Dark theme: only the colors flip; shapes/spacing/fonts are inherited from :root.
+   Without this, components render dark text on a dark host. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --logto-color-background: #2a2c2e;
+    --logto-color-typeface-primary: #e0e3e3;
+    --logto-color-typeface-secondary: #a9acad;
+    --logto-color-container-on-success: #68be6c;
+  }
+}

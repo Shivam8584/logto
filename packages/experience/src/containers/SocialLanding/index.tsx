@@ -12,6 +12,7 @@ type Props = {
 const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => {
   const { findConnectorById, getConnectorLogo } = useConnectors();
   const result = findConnectorById(connectorId);
+  const logoUrl = result ? getConnectorLogo(result) : undefined;
 
   return (
     <div
@@ -20,9 +21,13 @@ const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => 
         className
       )}
     >
-      <div className="mb-4 [&>img]:w-24 [&>img]:h-24 [&>img]:object-contain [&>img]:object-center">
-        {result ? <img src={getConnectorLogo(result)} alt="logo" /> : connectorId}
-      </div>
+      {/* Only render the logo when we actually have a URL, otherwise the <img> shows a
+          broken-image glyph on these full-screen redirect pages. */}
+      {logoUrl && (
+        <div className="mb-4 [&>img]:w-24 [&>img]:h-24 [&>img]:object-contain [&>img]:object-center">
+          <img src={logoUrl} alt="logo" />
+        </div>
+      )}
       {isLoading && <LoadingIcon />}
     </div>
   );

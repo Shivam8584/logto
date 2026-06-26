@@ -30,7 +30,7 @@ const BrandingHeader = ({
     <div
       className={classNames(
         'w-full flex flex-col justify-center mobile:h-[15vh] mobile:min-h-[92px] mobile:max-h-[148px]',
-        isConnectPair ? 'items-center' : 'items-start text-left',
+        isConnectPair ? 'items-center' : 'items-start text-start',
         className
       )}
     >

@@ -314,7 +314,9 @@ const CountryCodeDropdown = ({
                     className="shrink-0 w-6 h-6 rounded-full shadow-[0_0_0_1px_var(--color-line-divider)]"
                   />
                 )}
-                <span className="flex-1 truncate text-ink">{countryName}</span>
+                <span className="flex-1 truncate text-ink" title={countryName}>
+                  {countryName}
+                </span>
                 <span className="calling-code shrink-0 text-muted [font-variant-numeric:tabular-nums]">{`+${countryCallingCode}`}</span>
                 {isActive && <CheckIcon className="shrink-0 ms-1 w-5 h-5 text-primary" />}
               </li>

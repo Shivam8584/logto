@@ -86,7 +86,9 @@ function DocumentButton() {
       className={styles.button}
       icon={<DocumentIcon className={styles.icon} />}
     >
-      <DynamicT forKey="topbar.docs" />
+      <span className={styles.label}>
+        <DynamicT forKey="topbar.docs" />
+      </span>
     </TextLink>
   );
 }
@@ -110,7 +112,7 @@ function HelpButton() {
         }}
       >
         <ContactIcon className={styles.icon} />
-        <span>
+        <span className={styles.label}>
           <DynamicT forKey="topbar.help" />
         </span>
       </div>
@@ -156,7 +158,7 @@ function VersionButton() {
       className={styles.button}
       icon={<CubeIcon className={styles.icon} />}
     >
-      v{currentVersion}
+      <span className={styles.label}>v{currentVersion}</span>
       {isNewVersionAvailable && <div className={styles.newVersionDot} />}
     </TextLink>
   );

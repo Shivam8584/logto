@@ -61,7 +61,7 @@ const SwitchAccount = () => {
       <PageMeta titleKey="description.switch_account" />
       <div className="flex flex-1 flex-col items-center justify-center w-full mx-auto max-w-[var(--max-w)]">
         {logoUrl && <img className="h-10 w-auto mx-auto" src={logoUrl} alt="app logo" />}
-        <div className="mt-8 text-sm font-medium self-start mobile:mb-4 desktop:mb-2">
+        <div className="mt-8 text-sm font-medium self-start w-full [overflow-wrap:anywhere] mobile:mb-4 desktop:mb-2">
           <DynamicT
             forKey="description.switch_account_title"
             interpolation={{ account: consentData.user.primaryEmail }}

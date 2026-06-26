@@ -47,13 +47,22 @@ const OrganizationSelectorModal = ({
     // The padding around the modal content
     const organizationModalPadding = 8;
 
-    // Calculate the max top position so that the modal doesn't go off the screen
-    const modalContentHeight =
-      organizations.length * organizationItemHeight + organizationModalPadding * 2;
     const windowHeight = window.innerHeight;
-    const maxTop = windowHeight - modalContentHeight;
 
-    setPosition({ top: Math.min(top + height + offset, maxTop), left, width });
+    // Cap the dropdown so a long org list can't grow past the viewport. The inner
+    // content scrolls (see `max-h`/`overflow-y-auto` below) once it exceeds this.
+    const naturalHeight =
+      organizations.length * organizationItemHeight + organizationModalPadding * 2;
+    const maxModalHeight = windowHeight * 0.6;
+    const modalContentHeight = Math.min(naturalHeight, maxModalHeight);
+
+    // Prefer opening below the trigger, but clamp so the modal never runs off the
+    // top of the screen (which previously made the upper items unreachable).
+    const desiredTop = top + height + offset;
+    const maxTop = windowHeight - modalContentHeight - offset;
+    const clampedTop = Math.max(offset, Math.min(desiredTop, maxTop));
+
+    setPosition({ top: clampedTop, left, width, maxHeight: modalContentHeight });
   }, [isMobile, isOpen, organizations.length, parentElementRef]);
 
   useLayoutEffect(() => {
@@ -78,7 +87,7 @@ const OrganizationSelectorModal = ({
       closeTimeoutMS={isMobile ? 300 : 0}
       onRequestClose={onClose}
     >
-      <div className="p-2 mobile:px-1 mobile:py-3">
+      <div className="p-2 max-h-[inherit] overflow-y-auto mobile:max-h-[60vh] mobile:px-1 mobile:py-3">
         {organizations.map((organization) => (
           <OrganizationItem
             key={organization.id}

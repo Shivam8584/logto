@@ -22,7 +22,9 @@ export class LogtoIcon extends LitElement {
   `;
 
   render() {
-    return html`<slot></slot>`;
+    // The icon is purely decorative — the adjacent text (or the host element's own
+    // accessible name) conveys the meaning — so hide it from assistive tech.
+    return html`<slot aria-hidden="true"></slot>`;
   }
 }
 
