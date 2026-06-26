@@ -56,7 +56,6 @@ jobs:
         with:
           artifact-name: alteration-integration-test-${{ github.sha }}
           branch: ${{ github.base_ref }}
-          pnpm-version: 11
           node-version: ^24.0.0
 
   run-logto:
@@ -85,7 +84,6 @@ jobs:
           test-target: ${{ matrix.target }}
           db-alteration-target: ${{ github.head_ref }}
           db-alteration-repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          pnpm-version: 11
           node-version: ^24.0.0
 
   # Automatically rerun the workflow since the integration tests are moody
