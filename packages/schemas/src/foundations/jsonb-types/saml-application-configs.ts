@@ -40,11 +40,10 @@ export const samlEncryptionGuard = z
   .superRefine(({ encryptAssertion, encryptThenSign, certificate }, ctx) => {
     if (encryptAssertion && (encryptThenSign === undefined || certificate === undefined)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message:
           '`encryptThenSign` and `certificate` are required when `encryptAssertion` is `true`',
       });
-      return z.NEVER;
     }
   });
 

@@ -1,7 +1,6 @@
 import { jsonGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import type { Json } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import type { UserInfo } from '../user.js';
 
@@ -14,23 +13,21 @@ export const inlineHookExecutionErrorPolicies = Object.freeze(['block', 'allow']
 
 export type InlineHookExecutionErrorPolicy = (typeof inlineHookExecutionErrorPolicies)[number];
 
-export type InlineHook = {
-  script: string;
-  environmentVariables?: Record<string, string>;
-  contextSample?: Json;
-  enabled?: boolean;
-  onExecutionError?: InlineHookExecutionErrorPolicy;
-};
-
 export const inlineHookGuard = z
   .object({
     script: z.string(),
-    environmentVariables: z.record(z.string()).optional(),
+    environmentVariables: z.record(z.string(), z.string()).optional(),
     contextSample: jsonGuard.optional(),
     enabled: z.boolean().optional(),
     onExecutionError: z.enum(inlineHookExecutionErrorPolicies).optional(),
   })
-  .strict() satisfies z.ZodType<InlineHook>;
+  .strict();
+
+// Derive the type from the guard (as jwt-customizer does) so the guard's
+// inferred output and `InlineHook` can never diverge — under zod 4 a manually
+// written type drifts from `z.record`/`jsonGuard` inference and breaks the
+// `z.infer<inlineHookConfigGuard[T]>` consumers in core's logto-config library.
+export type InlineHook = z.infer<typeof inlineHookGuard>;
 
 export type HookUser = Pick<
   UserInfo,

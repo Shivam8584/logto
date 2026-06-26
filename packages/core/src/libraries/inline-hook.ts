@@ -160,7 +160,7 @@ export class InlineHookLibrary {
         throw new LocalVmError(
           {
             message: 'Invalid input',
-            errors: error.errors,
+            errors: error.issues,
           },
           400
         );

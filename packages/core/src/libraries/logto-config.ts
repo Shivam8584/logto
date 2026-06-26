@@ -171,7 +171,7 @@ export const createLogtoConfigLibrary = ({
 
   const upsertInlineHook = async <T extends LogtoInlineHookKey>(
     key: T,
-    value: InlineHookType[T]
+    value: z.infer<(typeof inlineHookConfigGuard)[T]>
   ) => {
     const { value: rawValue } = await queryUpsertInlineHook(key, value);
 
@@ -193,7 +193,16 @@ export const createLogtoConfigLibrary = ({
       });
     }
 
-    return z.object({ value: inlineHookConfigGuard[key] }).parse(rows[0]).value;
+    // `inlineHookConfigGuard[key]` is the abstract `ZodType<InlineHookType[key]>`, whose output
+    // type Zod 4 can no longer thread through `z.object(...).parse()` (see
+    // https://github.com/colinhacks/zod/issues/4817). Assert the known shape of the parsed row,
+    // mirroring `getJwtCustomizer` above.
+    // eslint-disable-next-line no-restricted-syntax
+    const { value } = z.object({ value: inlineHookConfigGuard[key] }).parse(rows[0]) as {
+      value: InlineHookType[T];
+    };
+
+    return value;
   };
 
   const getInlineHooks = async (consoleLog: ConsoleLog): Promise<Partial<InlineHookType>> => {

@@ -2,7 +2,7 @@ import mdx from '@mdx-js/rollup';
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import { findUp } from 'find-up';
-import rehypeMdxCodeProps from 'rehype-mdx-code-props';
+import rehypeMdxCodePropsPlugin from 'rehype-mdx-code-props';
 import remarkGfm from 'remark-gfm';
 import { defineConfig, mergeConfig, type UserConfig } from 'vite';
 import viteCompression from 'vite-plugin-compression';
@@ -35,7 +35,12 @@ const buildConfig = (mode: string): UserConfig => ({
       ...mdx({
         providerImportSource: '@mdx-js/react',
         remarkPlugins: [remarkGfm],
-        rehypePlugins: [[rehypeMdxCodeProps, { tagName: 'code' }]],
+        // rehype-mdx-code-props pins unified@11.0.3 while @mdx-js/rollup resolves
+        // 11.0.5; the two `unified` copies produce structurally-identical but
+        // nominally-incompatible `Pluggable` types, so bridge them with a cast.
+        // `unified` isn't a direct dependency here, hence `never` over `Pluggable`.
+        // eslint-disable-next-line no-restricted-syntax
+        rehypePlugins: [[rehypeMdxCodePropsPlugin as never, { tagName: 'code' }]],
       }),
     },
     react(),
