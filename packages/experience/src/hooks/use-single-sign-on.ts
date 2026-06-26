@@ -83,6 +83,9 @@ const useSingleSignOn = () => {
       // Invoke Native Sign In flow
       if (isNativeWebview()) {
         nativeSignInHandler(authorizationUri, connectorId);
+        // Stop here in a native webview — otherwise the web redirect below also runs
+        // and the flow double-fires (matches use-social.ts).
+        return;
       }
 
       // Invoke Web Sign In flow

@@ -35,7 +35,10 @@ const LandingPageLayout = ({ children, title, titleInterpolation, thirdPartyBran
   return (
     <FirstScreenLayout pageMeta={{ titleKey: title, titleKeyInterpolation: titleInterpolation }}>
       <BrandingHeader
-        className={classNames('mobile:mt-3 mobile:pb-8 desktop:mb-7', layoutClassNames.brandingHeader)}
+        className={classNames(
+          'mobile:mt-3 mobile:pb-8 desktop:mb-7',
+          layoutClassNames.brandingHeader
+        )}
         headline={title}
         headlineInterpolation={titleInterpolation}
         logo={getBrandingLogoUrl({ theme, branding, isDarkModeEnabled })}

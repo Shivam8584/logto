@@ -62,7 +62,7 @@ export const collectErrorTexts = (root: HTMLElement | Document): string[] => {
   // Error messages render as danger-styled containers (Tailwind `text-danger`) across the profile
   // field components; also match the legacy `[role="alert"]` for any field that still uses it.
   const elements = Array.from(root.querySelectorAll('[role="alert"], .text-danger'));
-  return elements.map((element) => element.textContent?.trim() ?? '').filter(Boolean);
+  return elements.map((element) => element.textContent.trim()).filter(Boolean);
 };
 
 export const queryInput = (root: ParentNode, selector: string) => {

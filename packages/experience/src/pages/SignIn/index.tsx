@@ -9,8 +9,6 @@ import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useSearchParams } from 'react-router-dom';
 
-import useStepUpAcr from '@/hooks/use-step-up-acr';
-
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
@@ -25,6 +23,7 @@ import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
+import useStepUpAcr from '@/hooks/use-step-up-acr';
 import useTerms from '@/hooks/use-terms';
 
 import ErrorPage from '../ErrorPage';
@@ -155,12 +154,7 @@ const SignIn = () => {
    * identifier/password step and shows only MFA verification.
    */
   if (stepUpAcr) {
-    return (
-      <Navigate
-        replace
-        to={{ pathname: '/step-up', search: `?${params.toString()}` }}
-      />
-    );
+    return <Navigate replace to={{ pathname: '/step-up', search: `?${params.toString()}` }} />;
   }
 
   if (params.get(ExtraParamsKey.OneTimeToken)) {

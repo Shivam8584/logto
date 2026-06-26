@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 
 import PrimitiveProfileInputField from '@/components/InputFields/PrimitiveProfileInputField';
 import { fullnameFieldConfigGuard } from '@/types/guard';
@@ -42,9 +41,7 @@ const FullnameSubForm = ({ field }: Props) => {
 
   return (
     <div className="flex flex-col gap-1">
-      <div
-        className={classNames('flex gap-3 max-[580px]:flex-col', isVertical && 'flex-col')}
-      >
+      <div className={classNames('flex gap-3 max-[580px]:flex-col', isVertical && 'flex-col')}>
         {enabledParts.map((part) => (
           <Controller
             key={part.name}

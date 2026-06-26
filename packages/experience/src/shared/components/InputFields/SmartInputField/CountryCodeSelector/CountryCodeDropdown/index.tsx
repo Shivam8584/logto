@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { CheckIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { DynamicFlag, FlagUtils } from '@sankyu/react-circle-flags';
 import { conditional } from '@silverhand/essentials';
@@ -5,8 +6,8 @@ import classNames from 'classnames';
 import type { KeyboardEventHandler } from 'react';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sheet } from 'react-modal-sheet';
 import ReactModal from 'react-modal';
+import { Sheet } from 'react-modal-sheet';
 
 import useDebounce from '@/hooks/use-debounce';
 import usePlatform from '@/hooks/use-platform';
@@ -143,12 +144,15 @@ const CountryCodeDropdown = ({
       return Number.POSITIVE_INFINITY;
     };
 
-    return countryList
-      .map((country) => ({ country, rank: score(country) }))
-      .filter(({ rank }) => Number.isFinite(rank))
-      // Stable sort by rank; within a rank the original alphabetical order is preserved.
-      .sort((previous, next) => previous.rank - next.rank)
-      .map(({ country }) => country);
+    return (
+      countryList
+        .map((country) => ({ country, rank: score(country) }))
+        .filter(({ rank }) => Number.isFinite(rank))
+        // Stable sort by rank; within a rank the original alphabetical order is preserved.
+        .slice()
+        .sort((previous, next) => previous.rank - next.rank)
+        .map(({ country }) => country)
+    );
   }, [countryList, debouncedSearchValue]);
 
   useLayoutEffect(() => {
@@ -247,15 +251,15 @@ const CountryCodeDropdown = ({
       // keyboard the instant the sheet opens, covering the list. The user taps to search.
       autoFocus={!isMobile}
       name="country-code-search"
-      type="text"
-      // inputMode="none" on mobile until the user taps the field — keeps the keyboard down.
-      inputMode={isMobile && !isSearchEngaged ? 'none' : 'text'}
-      onPointerDown={isMobile ? onSearchPointerDown : undefined}
       prefix={<MagnifyingGlassIcon className="w-5 h-5" />}
       value={searchValue}
       className="mb-2 [&_input]:ps-2 [&_svg]:text-muted [&_svg]:self-center"
       inputFieldClassName="desktop:py-1.5 desktop:px-3 desktop:h-auto mobile:ps-4"
       placeholder={t('input.search_region_code')}
+      type="text"
+      // InputMode="none" on mobile until the user taps the field — keeps the keyboard down.
+      inputMode={isMobile && !isSearchEngaged ? 'none' : 'text'}
+      onPointerDown={isMobile ? onSearchPointerDown : undefined}
       onChange={onSearchChange}
       onKeyDown={onInputKeyDown}
     />
@@ -264,56 +268,59 @@ const CountryCodeDropdown = ({
   // Country list — shared by both surfaces. No negative margins / horizontal padding here
   // (those caused sideways scroll inside the sheet); spacing is owned by each wrapper.
   // On desktop the popover wrapper caps + scrolls; on mobile Sheet.Content scrolls.
-  const countryListEl = (
+  const countryListElement = (
     <>
       <ul className="list-none mobile:text-base desktop:max-h-[400px] desktop:overflow-y-auto">
-        {filteredCountryList.map(({ countryCallingCode, countryCode: countryKeyCode, countryName }) => {
-          const isActive = countryCallingCode === countryCode;
-          const isSelected = countryKeyCode === selectedCountryCode;
+        {filteredCountryList.map(
+          ({ countryCallingCode, countryCode: countryKeyCode, countryName }) => {
+            const isActive = countryCallingCode === countryCode;
+            const isSelected = countryKeyCode === selectedCountryCode;
 
-          return (
-            <li
-              key={countryKeyCode}
-              tabIndex={0}
-              data-id={countryKeyCode}
-              aria-selected={isSelected}
-              className={classNames(
-                'flex items-center gap-3 py-2.5 px-3 rounded-[11px] cursor-pointer',
-                conditional(isActive && '[&_.calling-code]:text-primary'),
-                conditional(isSelected && 'bg-[var(--color-overlay-neutral-hover)]')
-              )}
-              // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
-              role="button"
-              onKeyDown={onKeyDownHandler({
-                Enter: () => {
+            return (
+              // eslint-disable-next-line jsx-a11y/role-supports-aria-props -- aria-selected mirrors the highlighted row for the custom button-role list
+              <li
+                key={countryKeyCode}
+                tabIndex={0}
+                data-id={countryKeyCode}
+                aria-selected={isSelected}
+                className={classNames(
+                  'flex items-center gap-3 py-2.5 px-3 rounded-[11px] cursor-pointer',
+                  conditional(isActive && '[&_.calling-code]:text-primary'),
+                  conditional(isSelected && 'bg-[var(--color-overlay-neutral-hover)]')
+                )}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+                role="button"
+                onKeyDown={onKeyDownHandler({
+                  Enter: () => {
+                    onCodeChange(countryCallingCode);
+                  },
+                })}
+                onClick={() => {
                   onCodeChange(countryCallingCode);
-                },
-              })}
-              onClick={() => {
-                onCodeChange(countryCallingCode);
-              }}
-              onMouseEnter={() => {
-                setSelectedCountryCode(countryKeyCode);
-              }}
-              onMouseLeave={() => {
-                setSelectedCountryCode('');
-              }}
-            >
-              {FlagUtils.isValidCountryCode(countryKeyCode) && (
-                <DynamicFlag
-                  code={countryKeyCode.toLowerCase()}
-                  width={24}
-                  height={24}
-                  aria-hidden="true"
-                  className="shrink-0 w-6 h-6 rounded-full shadow-[0_0_0_1px_var(--color-line-divider)]"
-                />
-              )}
-              <span className="flex-1 truncate text-ink">{countryName}</span>
-              <span className="calling-code shrink-0 text-muted [font-variant-numeric:tabular-nums]">{`+${countryCallingCode}`}</span>
-              {isActive && <CheckIcon className="shrink-0 ms-1 w-5 h-5 text-primary" />}
-            </li>
-          );
-        })}
+                }}
+                onMouseEnter={() => {
+                  setSelectedCountryCode(countryKeyCode);
+                }}
+                onMouseLeave={() => {
+                  setSelectedCountryCode('');
+                }}
+              >
+                {FlagUtils.isValidCountryCode(countryKeyCode) && (
+                  <DynamicFlag
+                    code={countryKeyCode.toLowerCase()}
+                    width={24}
+                    height={24}
+                    aria-hidden="true"
+                    className="shrink-0 w-6 h-6 rounded-full shadow-[0_0_0_1px_var(--color-line-divider)]"
+                  />
+                )}
+                <span className="flex-1 truncate text-ink">{countryName}</span>
+                <span className="calling-code shrink-0 text-muted [font-variant-numeric:tabular-nums]">{`+${countryCallingCode}`}</span>
+                {isActive && <CheckIcon className="shrink-0 ms-1 w-5 h-5 text-primary" />}
+              </li>
+            );
+          }
+        )}
       </ul>
       {filteredCountryList.length === 0 && (
         <div className="text-muted py-1 px-2 text-center">
@@ -329,11 +336,11 @@ const CountryCodeDropdown = ({
   if (isMobile) {
     return (
       <Sheet
-        isOpen={isOpen}
-        // Size to content (capped by Container max-height), not a fixed snap.
-        detent="content"
         // Lift the sheet above the on-screen keyboard if the search field is focused.
         avoidKeyboard
+        // Size to content (capped by Container max-height), not a fixed snap.
+        detent="content"
+        isOpen={isOpen}
         // SINGLE close handler — fires for backdrop tap, drag-down dismiss, and Esc.
         // (Putting onTap on the backdrop too double-fired and bubbled to the trigger
         // underneath, re-opening the sheet — that was the "pops back" bug.)
@@ -366,7 +373,7 @@ const CountryCodeDropdown = ({
             disableDrag={({ scrollPosition }) => scrollPosition !== 'top'}
             scrollClassName="px-4 pb-[max(env(safe-area-inset-bottom),12px)] overscroll-contain"
           >
-            {countryListEl}
+            {countryListElement}
           </Sheet.Content>
         </Sheet.Container>
         {/* The backdrop is only interactive when given a handler (the lib sets
@@ -404,10 +411,11 @@ const CountryCodeDropdown = ({
         }}
       >
         {searchField}
-        {countryListEl}
+        {countryListElement}
       </div>
     </ReactModal>
   );
 };
 
 export default CountryCodeDropdown;
+/* eslint-enable max-lines */

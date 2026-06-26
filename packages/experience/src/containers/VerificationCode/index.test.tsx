@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- pre-existing large test suite; splitting risks altering shared setup/behaviour */
 import resource from '@logto/phrases-experience';
 import {
   AgreeToTermsPolicy,
@@ -517,3 +518,4 @@ describe('<VerificationCode />', () => {
     });
   });
 });
+/* eslint-enable max-lines */

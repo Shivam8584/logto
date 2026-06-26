@@ -54,7 +54,7 @@ const createHttpError = (body: RequestErrorBody) => {
     {} as Request,
     {} as ConstructorParameters<typeof HTTPError>[2]
   );
-  // ky v2 exposes the pre-parsed body on error.data (the production code reads this).
+  // Ky v2 exposes the pre-parsed body on error.data (the production code reads this).
   // eslint-disable-next-line @silverhand/fp/no-mutation
   error.data = body;
   return error;

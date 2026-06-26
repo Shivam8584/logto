@@ -38,13 +38,15 @@ jest.mock('@/apis/experience', () => ({
 // hook's control flow (rather than the loading plumbing) is what's under test.
 jest.mock('@/hooks/use-api', () => ({
   __esModule: true,
-  default: (api: (...args: unknown[]) => Promise<unknown>) => async (...args: unknown[]) => {
-    try {
-      return [null, await api(...args)];
-    } catch (error: unknown) {
-      return [error];
-    }
-  },
+  default:
+    (api: (...args: unknown[]) => Promise<unknown>) =>
+    async (...args: unknown[]) => {
+      try {
+        return [null, await api(...args)];
+      } catch (error: unknown) {
+        return [error];
+      }
+    },
 }));
 
 jest.mock('@/hooks/use-error-handler', () => ({
@@ -83,10 +85,14 @@ afterAll(() => {
 });
 
 /** Build an HTTP-error-like object matching what `ky` surfaces (an `Error` carrying nested `data`). */
+class MfaError extends Error {
+  constructor(public readonly data: { data: { availableFactors: MfaFactor[] } }) {
+    super('require mfa');
+  }
+}
+
 const createMfaError = (availableFactors: MfaFactor[]) =>
-  Object.assign(new Error('require mfa'), {
-    data: { data: { availableFactors } },
-  });
+  new MfaError({ data: { availableFactors } });
 
 describe('useStepUpVerification', () => {
   beforeEach(() => {

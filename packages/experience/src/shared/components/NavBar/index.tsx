@@ -66,7 +66,12 @@ const NavBar = ({ title, type = 'back', isHidden, onClose, onBack, onSkip }: Pro
   }, [handleBack, isClosable, onClose]);
 
   return (
-    <div className={navBarClass} data-hidden={isHidden || undefined}>
+    <div
+      className={navBarClass}
+      // `||` is intentional: when isHidden is false we want `undefined` to drop the data attribute, not `false`.
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      data-hidden={isHidden || undefined}
+    >
       <div
         role="button"
         tabIndex={0}

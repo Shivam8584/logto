@@ -115,6 +115,13 @@ const Consent = () => {
     );
   }
 
+  // The consent-info fetch failed with something other than access-denied (e.g. an
+  // expired interaction or a network error). Without this the page returns null and
+  // the user is left on a blank screen with at most a transient toast.
+  if (consentInfoError && !consentData) {
+    return <ErrorPage title="error.invalid_session" />;
+  }
+
   if (!consentData) {
     return null;
   }

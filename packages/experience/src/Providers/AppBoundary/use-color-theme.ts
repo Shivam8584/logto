@@ -29,15 +29,9 @@ const generateColorLibrary = (primaryColor: color, isDark: boolean) => ({
   // The glossy top-edge highlight reads on a dark button but must disappear on a
   // light (dark-mode) button, where a white edge would be invisible / muddy.
   [`--btn-edge`]: isDark ? 'rgba(255,255,255,0)' : 'rgba(255,255,255,0.85)',
-  [`--color-brand-hover`]: isDark
-    ? absoluteLighten(primaryColor, 8).string()
-    : '#000000',
-  [`--color-brand-pressed`]: isDark
-    ? absoluteDarken(primaryColor, 8).string()
-    : '#000000',
-  [`--color-brand-loading`]: isDark
-    ? absoluteDarken(primaryColor, 12).string()
-    : '#2a2a2a',
+  [`--color-brand-hover`]: isDark ? absoluteLighten(primaryColor, 8).string() : '#000000',
+  [`--color-brand-pressed`]: isDark ? absoluteDarken(primaryColor, 8).string() : '#000000',
+  [`--color-brand-loading`]: isDark ? absoluteDarken(primaryColor, 12).string() : '#2a2a2a',
   // Neutral focus/hover overlays — derived from the near-black brand so they
   // read as soft grey washes, never a coloured tint.
   [`--color-overlay-brand-focused`]: primaryColor.alpha(0.16).string(),

@@ -1,6 +1,5 @@
 import { MissingProfile } from '@logto/schemas';
 import { useLocation, useParams } from 'react-router-dom';
-import { z } from 'zod';
 
 import ErrorPage from '@/pages/ErrorPage';
 import { continueFlowStateGuard } from '@/types/guard';

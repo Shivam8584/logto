@@ -1,6 +1,5 @@
 import { InteractionEvent, MissingProfile } from '@logto/schemas';
 import { useMemo } from 'react';
-import { z } from 'zod';
 
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserFlow, SearchParameters, type ContinueFlowInteractionEvent } from '@/types';
@@ -32,7 +31,7 @@ const useRequiredProfileErrorHandler = ({
   const requiredProfileErrorHandler = useMemo<ErrorHandlers>(
     () => ({
       'user.missing_profile': (error) => {
-        const { data: data } = missingProfileErrorDataGuard.safeParse(error.data);
+        const { data } = missingProfileErrorDataGuard.safeParse(error.data);
 
         // Required as a sign up method but missing in the user profile
         const missingProfile = data?.missingProfile[0];

@@ -27,27 +27,17 @@ const computeStrength = (password: string): number => {
     return 0;
   }
 
-  const variety = [/[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z\d]/].filter((regex) =>
+  const variety = [/[a-z]/, /[A-Z]/, /\d/, /[^\dA-Za-z]/].filter((regex) =>
     regex.test(password)
   ).length;
 
-  let score = 0;
-
-  // Length contribution.
-  if (password.length >= 8) {
-    score += 1;
-  }
-  if (password.length >= 12) {
-    score += 1;
-  }
-
-  // Variety contribution.
-  if (variety >= 3) {
-    score += 1;
-  }
-  if (variety >= 4) {
-    score += 1;
-  }
+  const score =
+    // Length contribution.
+    (password.length >= 8 ? 1 : 0) +
+    (password.length >= 12 ? 1 : 0) +
+    // Variety contribution.
+    (variety >= 3 ? 1 : 0) +
+    (variety >= 4 ? 1 : 0);
 
   // Score can legitimately be 0 for trivial input (e.g. a couple of lowercase letters).
   // We do NOT floor it to 1, so the meter doesn't flash a red "Weak" bar on the very first

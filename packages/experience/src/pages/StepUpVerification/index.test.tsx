@@ -34,6 +34,7 @@ jest.mock('@/hooks/use-step-up-acr', () => ({
 
 jest.mock('@/hooks/use-mfa-factors-state', () => ({
   __esModule: true,
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- this is the mocked hook itself, invoked by the component under test, not called directly in test code
   default: () => useMfaFlowState(),
 }));
 

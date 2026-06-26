@@ -3,12 +3,11 @@ import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { z } from 'zod';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
-import PasskeyScene from '@/components/illustrations/PasskeyScene';
 import { createSignInPasskeyRegistrationOptions, skipPasskeyBinding } from '@/apis/experience';
+import PasskeyScene from '@/components/illustrations/PasskeyScene';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';

@@ -12,6 +12,7 @@ import useMissingPasskeyErrorHandler from './use-missing-passkey-error-handler';
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
+import useSessionExpiredErrorHandler from './use-session-expired-error-handler';
 
 type Options = Omit<UseRequiredProfileErrorHandlerOptions, 'interactionEvent'> &
   UseMfaVerificationErrorHandlerOptions;
@@ -41,16 +42,19 @@ const useSubmitInteractionErrorHandler = (
   const mfaErrorHandler = useMfaErrorHandler({ replace });
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler();
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
+  const sessionExpiredErrorHandler = useSessionExpiredErrorHandler();
 
   return useMemo(
     () => ({
       ...emailBlockedErrorHandler,
+      ...sessionExpiredErrorHandler,
       ...requiredProfileErrorHandler,
       ...mfaErrorHandler,
       ...cond(passkeySignInErrorHandler),
     }),
     [
       emailBlockedErrorHandler,
+      sessionExpiredErrorHandler,
       mfaErrorHandler,
       passkeySignInErrorHandler,
       requiredProfileErrorHandler,

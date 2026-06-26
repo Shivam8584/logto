@@ -24,8 +24,6 @@ import useStepUpAcr from '@/hooks/use-step-up-acr';
 import useStepUpVerification from '@/hooks/use-step-up-verification';
 import { UserMfaFlow } from '@/types';
 
-import ErrorPage from '../ErrorPage';
-
 const StepUpVerification = () => {
   const { startStepUp } = useStepUpVerification();
   const flowState = useMfaFlowState();
@@ -50,7 +48,7 @@ const StepUpVerification = () => {
 
   return (
     <SecondaryPageLayout
-      title={isPhishingResistant ? 'mfa.step_up_phr_title' : 'mfa.step_up_mfa_title'}
+      isNavBarHidden
       description={
         isPhishingResistant ? 'mfa.step_up_phr_description' : 'mfa.step_up_mfa_description'
       }
@@ -59,7 +57,7 @@ const StepUpVerification = () => {
        * flow entirely, which is confusing. The user should either complete MFA
        * or close the browser tab / cancel from the client app.
        */
-      isNavBarHidden
+      title={isPhishingResistant ? 'mfa.step_up_phr_title' : 'mfa.step_up_mfa_title'}
     >
       <MfaFactorList flow={UserMfaFlow.MfaVerification} flowState={flowState} />
     </SecondaryPageLayout>

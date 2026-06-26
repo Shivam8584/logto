@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 
 import { extraProfileFieldNamesGuard } from '@/types/guard';
 

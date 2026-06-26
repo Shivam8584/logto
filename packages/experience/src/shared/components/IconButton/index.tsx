@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import type { HTMLProps, Ref } from 'react';
 import { forwardRef } from 'react';
 
-// min-w/h 44px meets Apple HIG's minimum tap target. The icon itself stays small
+// Min-w/h 44px meets Apple HIG's minimum tap target. The icon itself stays small
 // (callers pass w-5/h-5) and is centred, so the hit area grows without changing the
 // visual weight — important for the password-eye / input-clear buttons that sit inside
 // fields. Desktop shrinks to 32px since pointer targeting is precise there.

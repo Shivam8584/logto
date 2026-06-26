@@ -77,10 +77,7 @@ const IdentifierProfileForm = ({
 
   return (
     <form
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
       onSubmit={onSubmitHandler}
     >
       <Controller
@@ -124,9 +121,7 @@ const IdentifierProfileForm = ({
         )}
       />
 
-      {errorMessage && (
-        <ErrorMessage className="mb-4 ms-0.5 -mt-3">{errorMessage}</ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className="mb-4 ms-0.5 -mt-3">{errorMessage}</ErrorMessage>}
 
       <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
 

@@ -100,8 +100,8 @@ const InputField = (
           {...props}
           // Start padding only when there's no prefix; the country selector supplies its
           // own inset (ps-3.5) so the number text aligns right after the divider.
-          className={classNames(isPrefixVisible ? 'ps-2.5' : 'ps-3.5')}
           ref={innerRef}
+          className={classNames(isPrefixVisible ? 'ps-2.5' : 'ps-3.5')}
           value={value}
           onFocus={(event) => {
             setIsFocused(true);

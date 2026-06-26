@@ -70,7 +70,8 @@ const useAvatarCropUpload = ({ upload, onChange, onBlur }: Options) => {
     async (error: unknown) => {
       if (error instanceof HTTPError) {
         try {
-          // v2: error body is pre-parsed synchronously on error.data.
+          // V2: error body is pre-parsed synchronously on error.data.
+          // eslint-disable-next-line no-restricted-syntax
           const errorBody = error.data as RequestErrorBody;
           setUploadError(getAvatarUploadErrorMessage(errorBody, tAvatar));
           return;
@@ -88,7 +89,8 @@ const useAvatarCropUpload = ({ upload, onChange, onBlur }: Options) => {
     async (error: unknown) => {
       if (error instanceof HTTPError) {
         try {
-          // v2: error body is pre-parsed synchronously on error.data.
+          // V2: error body is pre-parsed synchronously on error.data.
+          // eslint-disable-next-line no-restricted-syntax
           const errorBody = error.data as RequestErrorBody;
           setUploadError(getAvatarPersistErrorMessage(errorBody, tAvatar));
           return;

@@ -1,5 +1,4 @@
-import { ExtraParamsKey, SignInIdentifier } from '@logto/schemas';
-import { experience } from '@logto/schemas';
+import { ExtraParamsKey, SignInIdentifier, experience } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -34,11 +33,9 @@ const ContinueWithPhoneButton = ({ mode, className }: Props) => {
 
   const handleClick = useCallback(() => {
     const path =
-      mode === 'signIn'
-        ? experience.routes.identifierSignIn
-        : experience.routes.identifierRegister;
+      mode === 'signIn' ? experience.routes.identifierSignIn : experience.routes.identifierRegister;
 
-    navigate(
+    void navigate(
       getTo({
         pathname: `/${path}`,
         search: new URLSearchParams({

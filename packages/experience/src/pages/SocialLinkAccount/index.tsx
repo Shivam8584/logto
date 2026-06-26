@@ -2,7 +2,6 @@ import { SignInIdentifier, VerificationType } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useContext } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { z } from 'zod';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';

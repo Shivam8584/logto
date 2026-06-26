@@ -1,5 +1,4 @@
 import { MfaFactor, VerificationType } from '@logto/schemas';
-import { z } from 'zod';
 
 import { mfaErrorDataGuard, verificationIdsMapGuard } from './guard';
 

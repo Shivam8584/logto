@@ -45,11 +45,7 @@ jest.mock('react-router-dom', () => ({
 // production error handler reads after the v2 upgrade).
 const createHttpError = (code: string) => {
   const body = { code, message: code };
-  const error = new HTTPError(
-    { json: async () => body } as Response,
-    {} as Request,
-    {} as never
-  );
+  const error = new HTTPError({ json: async () => body } as Response, {} as Request, {} as never);
   // eslint-disable-next-line @silverhand/fp/no-mutation
   error.data = body;
   return error;

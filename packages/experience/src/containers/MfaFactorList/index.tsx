@@ -1,5 +1,5 @@
 import { LogtoAcrValues, MfaFactor, SignInIdentifier } from '@logto/schemas';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import MfaFactorButton from '@/components/Button/MfaFactorButton';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
@@ -22,6 +22,11 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
   const stepUpAcr = useStepUpAcr();
   const { isWebAuthnUsedAsSignInPasskey } = flowState;
   const { onSubmit: sendMfaVerificationCode } = useSendMfaVerificationCode();
+
+  // Only one factor selection may be in flight: each branch fires an async send /
+  // WebAuthn prompt then navigates, so without this a double-tap sends two codes
+  // (invalidating the first) or opens overlapping WebAuthn prompts.
+  const [isSelecting, setIsSelecting] = useState(false);
 
   /**
    * For a phishing-resistant (`phr`) step-up, only WebAuthn satisfies the requested ACR, so the
@@ -73,10 +78,18 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
             key={factor}
             factor={factor}
             isBinding={flow === UserMfaFlow.MfaBinding}
-            isDisabled={isDisabled}
+            isDisabled={isDisabled || isSelecting}
             maskedIdentifier={maskedIdentifier}
             onClick={async () => {
-              await handleSelectFactor(factor);
+              if (isSelecting) {
+                return;
+              }
+              setIsSelecting(true);
+              try {
+                await handleSelectFactor(factor);
+              } finally {
+                setIsSelecting(false);
+              }
             }}
           />
         );

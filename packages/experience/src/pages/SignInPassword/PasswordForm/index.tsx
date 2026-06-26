@@ -46,6 +46,7 @@ const PasswordForm = ({
     register,
     handleSubmit,
     control,
+    trigger,
     formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
@@ -86,10 +87,7 @@ const PasswordForm = ({
 
   return (
     <form
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
       onSubmit={onSubmitHandler}
     >
       <Controller
@@ -110,12 +108,17 @@ const PasswordForm = ({
         label={t('input.password')}
         isDanger={!!errors.password}
         errorMessage={errors.password?.message}
-        {...register('password', { required: t('error.password_required') })}
+        {...register('password', {
+          required: t('error.password_required'),
+          // Clear a stale server error (e.g. invalid_credentials) as the user
+          // edits, mirroring the combined PasswordSignInForm.
+          onChange: () => {
+            void trigger('password');
+          },
+        })}
       />
 
-      {errorMessage && (
-        <ErrorMessage className="mb-4 ms-0.5 mt-0">{errorMessage}</ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className="mb-4 ms-0.5 mt-0">{errorMessage}</ErrorMessage>}
 
       {isForgotPasswordEnabled && (
         <ForgotPasswordLink

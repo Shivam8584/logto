@@ -10,6 +10,7 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validation';
+import useSessionExpiredErrorHandler from '@/hooks/use-session-expired-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
@@ -18,6 +19,7 @@ import { parseQueryParameters } from '@/utils';
 const useSingleSignOnRegister = () => {
   const handleError = useErrorHandler();
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler();
+  const sessionExpiredErrorHandler = useSessionExpiredErrorHandler();
 
   const request = useApi(registerWithVerifiedIdentifier);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
@@ -39,7 +41,7 @@ const useSingleSignOnRegister = () => {
       const [error, result] = await request(verificationId);
 
       if (error) {
-        await handleError(error, emailBlockedErrorHandler);
+        await handleError(error, { ...emailBlockedErrorHandler, ...sessionExpiredErrorHandler });
 
         return;
       }
@@ -51,6 +53,7 @@ const useSingleSignOnRegister = () => {
     [
       agreeToTermsPolicy,
       emailBlockedErrorHandler,
+      sessionExpiredErrorHandler,
       handleError,
       navigate,
       redirectTo,

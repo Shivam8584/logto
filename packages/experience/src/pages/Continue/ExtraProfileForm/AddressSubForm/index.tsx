@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { useCallback, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 
 import PrimitiveProfileInputField from '@/components/InputFields/PrimitiveProfileInputField';
 import { addressFieldConfigGuard } from '@/types/guard';

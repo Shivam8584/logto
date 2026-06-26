@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
-import DeviceScene from '@/components/illustrations/DeviceScene';
 import { InputField } from '@/components/InputFields';
+import DeviceScene from '@/components/illustrations/DeviceScene';
 import useToast from '@/hooks/use-toast';
 import Button from '@/shared/components/Button';
 
@@ -119,12 +119,12 @@ const Device = () => {
       );
 
       if (response.redirected) {
-        navigate(toNavigateUrl(response.url), { replace: true });
+        void navigate(toNavigateUrl(response.url), { replace: true });
         return;
       }
 
       if (response.ok) {
-        navigate(deviceSuccessPath, { replace: true });
+        void navigate(deviceSuccessPath, { replace: true });
         return;
       }
 

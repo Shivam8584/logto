@@ -38,17 +38,14 @@ const ErrorPage = ({
   const errorMessage = Boolean(rawMessage ?? message);
   const canGoBack = history.length > 1;
 
-  // When the user cannot go back and no explicit action is provided, offer a safe default
-  // so they are not stranded on the error page.
-  const resolvedAction: PrimaryAction | undefined =
-    primaryAction ??
-    (canGoBack
-      ? undefined
-      : {
-          title: 'description.back_to_sign_in',
-          to: `/${experience.routes.signIn}`,
-          replace: true,
-        });
+  // Always offer a back-to-sign-in escape when no explicit action is given. Even
+  // with history to go back to, the Back arrow can land the user right back on the
+  // route that errored (a loop), so a clear forward escape is always shown.
+  const resolvedAction: PrimaryAction = primaryAction ?? {
+    title: 'description.back_to_sign_in',
+    to: `/${experience.routes.signIn}`,
+    replace: true,
+  };
 
   return (
     <StaticPageLayout>
@@ -72,22 +69,20 @@ const ErrorPage = ({
           </div>
         )}
         <SupportInfo />
-        {resolvedAction && (
-          <Button
-            className="w-full mx-auto max-w-[var(--max-w)] mt-4 mobile:mb-4 desktop:mb-6"
-            title={resolvedAction.title}
-            onClick={() => {
-              if (resolvedAction.onClick) {
-                resolvedAction.onClick();
-                return;
-              }
+        <Button
+          className="w-full mx-auto max-w-[var(--max-w)] mt-4 mobile:mb-4 desktop:mb-6"
+          title={resolvedAction.title}
+          onClick={() => {
+            if (resolvedAction.onClick) {
+              resolvedAction.onClick();
+              return;
+            }
 
-              if (resolvedAction.to) {
-                navigate(resolvedAction.to, { replace: resolvedAction.replace });
-              }
-            }}
-          />
-        )}
+            if (resolvedAction.to) {
+              navigate(resolvedAction.to, { replace: resolvedAction.replace });
+            }
+          }}
+        />
       </div>
     </StaticPageLayout>
   );

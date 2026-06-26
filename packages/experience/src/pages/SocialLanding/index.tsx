@@ -49,11 +49,7 @@ const SocialLanding = () => {
 
   return (
     <StaticPageLayout>
-      <SocialLandingContainer
-        className="flex-1"
-        connectorId={connectorId}
-        isLoading={loading}
-      />
+      <SocialLandingContainer className="flex-1" connectorId={connectorId} isLoading={loading} />
     </StaticPageLayout>
   );
 };

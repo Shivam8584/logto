@@ -57,6 +57,24 @@ const VerificationCode = ({
     identifier
   );
 
+  // Guards the resend link against repeat clicks: `isRunning` only flips true once
+  // the resend request resolves and the countdown restarts, so without this a burst
+  // of clicks fires several send calls and invalidates earlier codes.
+  const [isResending, setIsResending] = useState(false);
+  const handleResend = useCallback(async () => {
+    if (isResending) {
+      return;
+    }
+    setIsResending(true);
+    try {
+      clearErrorMessage();
+      await onResendVerificationCode();
+      setCodeInput([]);
+    } finally {
+      setIsResending(false);
+    }
+  }, [isResending, clearErrorMessage, onResendVerificationCode]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = useCallback(
@@ -97,10 +115,7 @@ const VerificationCode = ({
 
   return (
     <form
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
     >
       <VerificationCodeInput
         name="passcode"
@@ -120,10 +135,8 @@ const VerificationCode = ({
               a: (
                 <TextLink
                   className="w-auto self-start"
-                  onClick={async () => {
-                    clearErrorMessage();
-                    await onResendVerificationCode();
-                    setCodeInput([]);
+                  onClick={() => {
+                    void handleResend();
                   }}
                 />
               ),

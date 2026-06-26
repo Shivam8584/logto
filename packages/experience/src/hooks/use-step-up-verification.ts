@@ -17,7 +17,6 @@
 import { InteractionEvent, LogtoAcrValues } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 
 import { initInteraction, submitInteraction } from '@/apis/experience';
 import { mfaErrorDataGuard } from '@/types/guard';
@@ -57,14 +56,15 @@ const useStepUpVerification = () => {
       // `availableFactors` means the user has no MFA enrolled. The generic
       // mfaErrorHandler would just show error.message (a raw API string).
       // Show a human-readable, localised message instead.
-      const isHTTPError =
-        submitError instanceof Error && 'data' in submitError;
+      const isHTTPError = submitError instanceof Error && 'data' in submitError;
 
       if (isHTTPError) {
+        // eslint-disable-next-line no-restricted-syntax
         const errorData = (submitError as { data?: unknown }).data;
-        const { data: mfaData } = mfaErrorDataGuard
-        .safeParse(
-          (errorData as { data?: unknown })?.data);
+        const { data: mfaData } = mfaErrorDataGuard.safeParse(
+          // eslint-disable-next-line no-restricted-syntax
+          (errorData as { data?: unknown }).data
+        );
         if (mfaData && mfaData.availableFactors.length === 0) {
           // Tailor the message to the requested assurance level: a phishing-resistant (`phr`)
           // step-up needs a security key specifically, whereas `mfa` accepts any second factor.

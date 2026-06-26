@@ -7,7 +7,6 @@ import { InteractionEvent, SignInMode, VerificationType, experience } from '@log
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { z } from 'zod';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import {
@@ -58,7 +57,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const accountNotExistErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
-      const { data: data } = socialAccountNotExistErrorDataGuard.safeParse(error.data);
+      const { data } = socialAccountNotExistErrorDataGuard.safeParse(error.data);
       const { relatedUser } = data ?? {};
       const verificationId = verificationIdRef.current;
 

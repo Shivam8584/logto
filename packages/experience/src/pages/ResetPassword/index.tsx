@@ -13,6 +13,7 @@ import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
 import useToast from '@/hooks/use-toast';
+import { UserFlow } from '@/types';
 
 const ResetPassword = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -35,7 +36,10 @@ const ResetPassword = () => {
     () => ({
       'session.verification_session_not_found': async (error) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
-        navigate(-2);
+        // Restart the forgot-password flow rather than a fragile relative
+        // navigate(-2), which depends on exact history depth and can land the
+        // user on an unexpected page.
+        navigate(`/${UserFlow.ForgotPassword}`, { replace: true });
       },
       'user.same_password': (error) => {
         setErrorMessage(error.message);

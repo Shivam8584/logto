@@ -2,7 +2,6 @@ import { VerificationType } from '@logto/schemas';
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { z } from 'zod';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';

@@ -25,11 +25,11 @@ const OrganizationItem = ({
 }: OrganizationItemProps) => {
   return (
     <div
+      data-organization-item
       className={classNames(
         'group rounded-[11px] py-2.5 px-2 cursor-pointer flex items-center overlay-hover data-[selected=true]:text-primary',
         className
       )}
-      data-organization-item
       data-selected={isSelected}
       {...(onSelect && {
         role: 'button',

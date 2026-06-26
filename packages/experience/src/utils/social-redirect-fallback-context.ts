@@ -23,9 +23,9 @@ const redirectContextStruct = z.object({
   verificationId: z.string(),
   createdAt: z.number(),
   expiresAt: z.number(),
-  appId: (z.string()).optional(),
-  organizationId: (z.string()).optional(),
-  uiLocales: (z.string()).optional(),
+  appId: z.string().optional(),
+  organizationId: z.string().optional(),
+  uiLocales: z.string().optional(),
 });
 
 export type RedirectContext = z.infer<typeof redirectContextStruct>;
@@ -45,7 +45,7 @@ const parseAndValidate = (raw: string): RedirectContext | undefined => {
     return undefined;
   }
 
-  const { error: error, data: context } = redirectContextStruct.safeParse(parsed);
+  const { error, data: context } = redirectContextStruct.safeParse(parsed);
 
   if (error) {
     return undefined;

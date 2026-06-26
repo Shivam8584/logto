@@ -113,10 +113,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
 
   return (
     <form
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
       onSubmit={onSubmitHandler}
     >
       <Controller
@@ -148,9 +145,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         )}
       />
 
-      {errorMessage && (
-        <ErrorMessage className="mb-4 ms-0.5 mt-0">{errorMessage}</ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className="mb-4 ms-0.5 mt-0">{errorMessage}</ErrorMessage>}
 
       {showSingleSignOnForm && (
         <div className="mb-4 text-sm text-muted">{t('description.single_sign_on_enabled')}</div>

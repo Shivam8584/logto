@@ -21,8 +21,9 @@ const useErrorHandler = () => {
     async (error: unknown, errorHandlers?: ErrorHandlers) => {
       if (error instanceof HTTPError) {
         try {
-          // v2: error body is pre-parsed and available on error.data (response body
+          // V2: error body is pre-parsed and available on error.data (response body
           // is already consumed — awaiting error.response.json() would throw).
+          // eslint-disable-next-line no-restricted-syntax
           const logtoError = error.data as RequestErrorBody;
 
           const { code, message } = logtoError;

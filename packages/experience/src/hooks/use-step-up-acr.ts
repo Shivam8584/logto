@@ -15,6 +15,7 @@ const useStepUpAcr = (): LogtoAcrValue | undefined => {
   const raw = searchParams.get(ExtraParamsKey.StepUpAcr);
 
   if (raw && knownAcrValues.has(raw)) {
+    // eslint-disable-next-line no-restricted-syntax
     return raw as LogtoAcrValue;
   }
 

@@ -30,7 +30,11 @@ const TogglePassword = ({ isChecked, onChange }: Props) => {
         ' ': toggle,
       })}
     >
-      <Checkbox name="toggle-password" checked={isChecked} className="me-2 fill-muted cursor-pointer" />
+      <Checkbox
+        name="toggle-password"
+        checked={isChecked}
+        className="me-2 fill-muted cursor-pointer"
+      />
       <div>{t('action.show_password')}</div>
     </div>
   );

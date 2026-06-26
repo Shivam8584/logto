@@ -1,13 +1,16 @@
 import { conditional } from '@silverhand/essentials';
 import { useCallback } from 'react';
-import {
-  type NavigateFunction,
-  type NavigateOptions,
-  type To,
-  useNavigate,
-} from 'react-router-dom';
+import { type NavigateOptions, type To, useNavigate } from 'react-router-dom';
 
 import { searchKeys } from '@/shared/utils/search-parameters';
+
+/**
+ * A synchronous navigate signature. We deliberately do NOT use react-router's
+ * `NavigateFunction`: its overloads can resolve to `Promise<void>`, which makes
+ * `@typescript-eslint/no-floating-promises` flag every `navigate(...)` call site
+ * even though this wrapper never returns a promise.
+ */
+type PreservedNavigate = (firstArg: To | number, options?: NavigateOptions) => void;
 
 export const usePreserveSearchParams = () => {
   const getTo = useCallback((to: To) => {
@@ -52,14 +55,14 @@ const useNavigateWithPreservedSearchParams = () => {
   const navigate = useNavigate();
   const { getTo } = usePreserveSearchParams();
 
-  const navigateWithSearchParams: NavigateFunction = useCallback(
+  const navigateWithSearchParams: PreservedNavigate = useCallback(
     (firstArg: To | number, options?: NavigateOptions) => {
       if (typeof firstArg === 'number') {
-        navigate(firstArg);
+        void navigate(firstArg);
         return;
       }
 
-      navigate(getTo(firstArg), options);
+      void navigate(getTo(firstArg), options);
     },
     [getTo, navigate]
   );

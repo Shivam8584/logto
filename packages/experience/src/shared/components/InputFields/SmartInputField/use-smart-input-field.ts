@@ -55,20 +55,23 @@ const useSmartInputField = ({ defaultValue, enabledTypes }: Props) => {
   // value the user (or a prefilled identifier) already set. country.is is best-effort:
   // on failure the locale-derived default stands.
   const userTouchedCountry = useRef(Boolean(defaultCountryCode));
+  const cancelled = useRef(false);
   useEffect(() => {
-    let cancelled = false;
-    void detectCountryByIp().then((detected) => {
-      if (cancelled || !detected || userTouchedCountry.current) {
+    const upgradeFromIp = async () => {
+      const detected = await detectCountryByIp();
+      if (cancelled.current || !detected || userTouchedCountry.current) {
         return;
       }
       try {
         setCountryCode(getCountryCallingCode(detected));
       } catch {
-        // ignore — keep the existing default
+        // Ignore — keep the existing default
       }
-    });
+    };
+    void upgradeFromIp();
     return () => {
-      cancelled = true;
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      cancelled.current = true;
     };
   }, []);
 

@@ -40,7 +40,7 @@ const SetPassword = ({
   const [isCapsLockOn, setIsCapsLockOn] = useState(false);
 
   const detectCapsLock = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    setIsCapsLockOn(event.getModifierState?.('CapsLock') ?? false);
+    setIsCapsLockOn(event.getModifierState('CapsLock'));
   };
 
   const {
@@ -57,7 +57,10 @@ const SetPassword = ({
 
   // Compose the registered field's onBlur (used by RHF's onBlur revalidation) with the
   // Caps Lock reset so neither behaviour is lost.
-  const registerWithCapsLock = (field: keyof FieldState, options?: Parameters<typeof register>[1]) => {
+  const registerWithCapsLock = (
+    field: keyof FieldState,
+    options?: Parameters<typeof register>[1]
+  ) => {
     const { onBlur, ...rest } = register(field, options);
 
     return {
@@ -90,10 +93,7 @@ const SetPassword = ({
 
   return (
     <form
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
       onSubmit={onSubmitHandler}
     >
       <HiddenIdentifierInput />
@@ -158,9 +158,7 @@ const SetPassword = ({
         }
       />
 
-      {errorMessage && (
-        <ErrorMessage className="mb-4 ms-0.5 -mt-3">{errorMessage}</ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className="mb-4 ms-0.5 -mt-3">{errorMessage}</ErrorMessage>}
 
       <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
 

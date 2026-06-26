@@ -63,11 +63,7 @@ const TextLink = ({ className, children, text, icon, type = 'primary', to, ...re
 
   if (to) {
     return (
-      <Link
-        className={classNames(linkClass, typeClass[type], className)}
-        to={getTo(to)}
-        {...rest}
-      >
+      <Link className={classNames(linkClass, typeClass[type], className)} to={getTo(to)} {...rest}>
         {icon}
         {children ?? <DynamicT forKey={text} />}
       </Link>

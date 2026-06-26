@@ -34,7 +34,7 @@ export const detectCountryByIp = async (): Promise<CountryCode | undefined> => {
     if (!response.ok) {
       return undefined;
     }
-    const { country } = (await response.json()) as { country?: string };
+    const { country }: { country?: string } = await response.json();
     return country && isValidCountryCode(country) ? country : undefined;
   } catch {
     return undefined;
@@ -132,8 +132,29 @@ const buildCountryMetaData = (countryCode: CountryCode): CountryMetaData => ({
  * users pick) stay. Anyone in a hidden territory can still type their full +1 number.
  */
 const hiddenSharedCodeRegions = new Set<CountryCode>([
-  'AG', 'AI', 'AS', 'BB', 'BM', 'BS', 'DM', 'DO', 'GD', 'GU', 'JM', 'KN', 'KY',
-  'LC', 'MP', 'MS', 'PR', 'SX', 'TC', 'TT', 'VC', 'VG', 'VI',
+  'AG',
+  'AI',
+  'AS',
+  'BB',
+  'BM',
+  'BS',
+  'DM',
+  'DO',
+  'GD',
+  'GU',
+  'JM',
+  'KN',
+  'KY',
+  'LC',
+  'MP',
+  'MS',
+  'PR',
+  'SX',
+  'TC',
+  'TT',
+  'VC',
+  'VG',
+  'VI',
 ]);
 
 export const getCountryList = (): CountryMetaData[] => {
@@ -143,6 +164,7 @@ export const getCountryList = (): CountryMetaData[] => {
     .filter((code) => code !== defaultCountryCode && !hiddenSharedCodeRegions.has(code))
     .map((code) => buildCountryMetaData(code))
     // Sort alphabetically by localized country name so the list reads naturally.
+    .slice()
     .sort((previous, next) =>
       previous.countryName.localeCompare(next.countryName, i18next.language)
     );

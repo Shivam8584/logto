@@ -57,10 +57,7 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
 
   return (
     <form
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
       onSubmit={onSubmitHandler}
     >
       <HiddenIdentifierInput />
@@ -81,9 +78,7 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
         <StrengthMeter className="-mt-3 mb-4" password={newPasswordValue} />
       )}
 
-      {errorMessage && (
-        <ErrorMessage className="mb-4 ms-0.5 -mt-3">{errorMessage}</ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className="mb-4 ms-0.5 -mt-3">{errorMessage}</ErrorMessage>}
 
       <Button
         name="submit"

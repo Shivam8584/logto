@@ -1,5 +1,5 @@
 import { InteractionEvent, type SignInIdentifier } from '@logto/schemas';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { verifyMfaByVerificationCode } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
@@ -15,7 +15,6 @@ const useMfaCodeVerification = (
   verificationId: string,
   errorCallback?: () => void
 ) => {
-  const [errorMessage, setErrorMessage] = useState<string>();
   const asyncVerify = useApi(verifyMfaByVerificationCode);
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
@@ -42,7 +41,6 @@ const useMfaCodeVerification = (
 
       if (error) {
         await handleError(error, errorHandlers);
-        setErrorMessage(generalErrorMessage);
         errorCallback?.();
         return;
       }
@@ -64,7 +62,7 @@ const useMfaCodeVerification = (
   );
 
   return {
-    errorMessage: errorMessage ?? generalErrorMessage,
+    errorMessage: generalErrorMessage,
     onSubmit,
   };
 };

@@ -36,7 +36,6 @@ import EmailVerificationCode from './pages/MfaVerification/EmailVerificationCode
 import PhoneVerificationCode from './pages/MfaVerification/PhoneVerificationCode';
 import TotpVerification from './pages/MfaVerification/TotpVerification';
 import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
-import StepUpVerification from './pages/StepUpVerification';
 import OneTimeToken from './pages/OneTimeToken';
 import OneTimeTokenErrorPage from './pages/OneTimeToken/Error';
 import PasskeySetup from './pages/PasskeySetup';
@@ -55,6 +54,7 @@ import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
 import Springboard from './pages/Springboard';
+import StepUpVerification from './pages/StepUpVerification';
 import SwitchAccount from './pages/SwitchAccount';
 import VerificationCode from './pages/VerificationCode';
 import { queryClient } from './query-client';

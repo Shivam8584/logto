@@ -26,9 +26,14 @@ const DeviceScene = () => (
     {/* central card — segmented device code */}
     <div
       className="scene-float relative flex w-[180px] flex-col gap-2.5 rounded-[16px] border border-line p-3"
-      style={{ background: 'var(--card-top), var(--bg-elevated)', boxShadow: 'var(--edge), var(--sh-float)' }}
+      style={{
+        background: 'var(--card-top), var(--bg-elevated)',
+        boxShadow: 'var(--edge), var(--sh-float)',
+      }}
     >
-      <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">Device code</div>
+      <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">
+        Device code
+      </div>
       <div className="flex items-center gap-1.5">
         {codeCells.map((cell, index) => (
           <span
@@ -46,10 +51,17 @@ const DeviceScene = () => (
     {/* device chip — floats with a green "linked" pulse dot */}
     <span
       className="scene-float absolute right-2 bottom-5 grid size-11 place-items-center rounded-[14px] border border-line text-muted"
-      style={{ background: 'var(--bg-elevated)', boxShadow: 'var(--edge), var(--sh-soft)', animationDelay: '0.9s' }}
+      style={{
+        background: 'var(--bg-elevated)',
+        boxShadow: 'var(--edge), var(--sh-soft)',
+        animationDelay: '0.9s',
+      }}
     >
       <ComputerDesktopIcon className="size-5" />
-      <span className="scene-pulse absolute -right-1 -top-1 size-3 rounded-full bg-success" style={{ animationDelay: '0.4s' }} />
+      <span
+        className="scene-pulse absolute -right-1 -top-1 size-3 rounded-full bg-success"
+        style={{ animationDelay: '0.4s' }}
+      />
     </span>
   </div>
 );

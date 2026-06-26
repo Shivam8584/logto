@@ -16,7 +16,7 @@ jest.mock('i18next', () => ({
 
 // Stub the flag library so tests don't depend on its inline-SVG internals.
 jest.mock('@sankyu/react-circle-flags', () => ({
-  DynamicFlag: ({ code }: { code: string }) => <span data-flag={code} />,
+  DynamicFlag: ({ code }: { readonly code: string }) => <span data-flag={code} />,
   FlagUtils: { isValidCountryCode: () => true },
 }));
 

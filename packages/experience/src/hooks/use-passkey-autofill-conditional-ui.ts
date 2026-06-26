@@ -47,7 +47,7 @@ const usePasskeyAutofillConditionalUI = () => {
   const passkeyNotFoundHandler: ErrorHandlers = useMemo(
     () => ({
       'session.mfa.webauthn_verification_not_found': async () => {
-        // no-op: fall back to the standard sign-in methods silently
+        // No-op: fall back to the standard sign-in methods silently
       },
     }),
     []

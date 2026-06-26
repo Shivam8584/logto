@@ -10,7 +10,7 @@ import InputField from '@/shared/components/InputFields/InputField';
 const dateInputWrapperClass = [
   'relative flex items-center gap-1.5 px-3.5 h-12 rounded-[11px] border bg-elevated shadow-[var(--sh-input)]',
   'transition-[border-color,box-shadow] duration-150 ease-out focus-visible:outline-none',
-  // inner native input: transparent bg, inherits color
+  // Inner native input: transparent bg, inherits color
   '[&_input]:bg-transparent [&_input]:text-ink [&_input]:[field-sizing:content] [&_input]:outline-none',
   '[&_input::placeholder]:text-faint [&_input:focus-visible]:outline-none',
 ].join(' ');
@@ -285,10 +285,7 @@ const DateField = (props: Props) => {
   return (
     <div ref={containerRef} className={classNames('flex flex-col', className)}>
       {labelWithOptionalSuffix && (
-        <label
-          htmlFor={firstInputId}
-          className="mb-1.5 block text-sm font-medium text-ink-2"
-        >
+        <label htmlFor={firstInputId} className="mb-1.5 block text-sm font-medium text-ink-2">
           {labelWithOptionalSuffix}
         </label>
       )}
@@ -296,11 +293,7 @@ const DateField = (props: Props) => {
         className={classNames(
           dateInputWrapperClass,
           // Resting / focus / danger border + ring (mirrors InputField)
-          errorMessage
-            ? 'border-danger'
-            : isFocused
-              ? 'border-primary'
-              : 'border-line-strong',
+          errorMessage ? 'border-danger' : isFocused ? 'border-primary' : 'border-line-strong',
           isFocused && !errorMessage && 'shadow-[var(--sh-input),0_0_0_3px_var(--primary-tint)]',
           isFocused && errorMessage && 'shadow-[var(--sh-input),0_0_0_3px_var(--danger-soft)]'
         )}

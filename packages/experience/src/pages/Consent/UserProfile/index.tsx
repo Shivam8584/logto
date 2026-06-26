@@ -16,9 +16,18 @@ const UserProfile = ({
   const { t } = useTranslation();
 
   return (
-    <div className={classNames('border border-line-strong rounded-[13px] p-4 flex items-center', className)}>
+    <div
+      className={classNames(
+        'border border-line-strong rounded-[13px] p-4 flex items-center',
+        className
+      )}
+    >
       {avatar ? (
-        <img src={avatar} alt="avatar" className="w-10 h-10 rounded-[8px] object-cover object-center me-3" />
+        <img
+          src={avatar}
+          alt="avatar"
+          className="w-10 h-10 rounded-[8px] object-cover object-center me-3"
+        />
       ) : (
         <UserAvatar className="w-10 h-10 rounded-[8px] object-cover object-center me-3" />
       )}

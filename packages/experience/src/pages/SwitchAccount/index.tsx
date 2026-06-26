@@ -10,7 +10,6 @@ import TextLink from '@/components/TextLink';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import UserProfile from '@/pages/Consent/UserProfile';
-import { getRedirectUriOrigin } from '@/pages/Consent/util';
 import ErrorPage from '@/pages/ErrorPage';
 import { queryKeys } from '@/query-client';
 import Button from '@/shared/components/Button';
@@ -56,9 +55,6 @@ const SwitchAccount = () => {
     branding,
   } = experienceSettings;
   const logoUrl = getBrandingLogoUrl({ theme, branding, isDarkModeEnabled });
-  const redirectUriOrigin = consentData.redirectUri
-    ? getRedirectUriOrigin(consentData.redirectUri)
-    : undefined;
 
   return (
     <StaticPageLayout>
@@ -92,8 +88,13 @@ const SwitchAccount = () => {
           <TextLink
             text="action.back_to_current_account"
             onClick={() => {
-              if (redirectUriOrigin) {
-                window.location.assign(redirectUriOrigin);
+              // Return to the app via the FULL redirect URI (keeping the OIDC
+              // continuation), not the origin-only display value. Fall back to a
+              // fresh sign-in so the link is never a silent no-op.
+              if (consentData.redirectUri) {
+                window.location.assign(consentData.redirectUri);
+              } else {
+                navigate('/' + experience.routes.signIn, { replace: true });
               }
             }}
           />

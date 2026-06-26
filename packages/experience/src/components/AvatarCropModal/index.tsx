@@ -109,10 +109,7 @@ const AvatarCropModal = ({
       // `--color-bg-mask` scrim from `overlayClassName` actually shows. See AcModal.
       style={{ overlay: {}, content: {} }}
       className="absolute w-[480px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 outline-none rounded-[16px] focus-visible:outline-none max-[640px]:w-[calc(100%-40px)]"
-      overlayClassName={classNames(
-        'fixed inset-0 bg-[var(--color-bg-mask)]',
-        'z-[var(--z-modal)]'
-      )}
+      overlayClassName={classNames('fixed inset-0 bg-[var(--color-bg-mask)]', 'z-[var(--z-modal)]')}
       onAfterClose={resetState}
       onRequestClose={handleCancel}
     >

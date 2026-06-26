@@ -2,7 +2,6 @@ import { SignInIdentifier, type VerificationCodeIdentifier } from '@logto/schema
 import { t } from 'i18next';
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { z } from 'zod';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';

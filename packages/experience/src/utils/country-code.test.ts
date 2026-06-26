@@ -93,7 +93,7 @@ describe('country-code', () => {
     const [, ...rest] = getCountryList();
 
     const names = rest.map(({ countryName }) => countryName);
-    const sorted = [...names].sort((a, b) => a.localeCompare(b, 'en'));
+    const sorted = names.slice().sort((first, second) => first.localeCompare(second, 'en'));
 
     expect(names).toEqual(sorted);
   });

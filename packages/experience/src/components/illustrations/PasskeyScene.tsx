@@ -24,11 +24,17 @@ const PasskeyScene = () => (
     {/* central fingerprint card */}
     <div
       className="scene-breathe relative grid size-[84px] place-items-center rounded-[20px] border border-line"
-      style={{ background: 'var(--card-top), var(--bg-elevated)', boxShadow: 'var(--edge), var(--sh-float)' }}
+      style={{
+        background: 'var(--card-top), var(--bg-elevated)',
+        boxShadow: 'var(--edge), var(--sh-float)',
+      }}
     >
       <FingerPrintIcon className="size-10 text-ink" />
       <span className="absolute -bottom-1.5 -right-1.5 grid size-7 place-items-center rounded-full bg-elevated">
-        <CheckCircleIcon className="scene-pop size-7 text-success" style={{ animationDelay: '0.4s' }} />
+        <CheckCircleIcon
+          className="scene-pop size-7 text-success"
+          style={{ animationDelay: '0.4s' }}
+        />
       </span>
     </div>
 
@@ -43,7 +49,11 @@ const PasskeyScene = () => (
     {/* factor chip — device (right, floating on a different phase) */}
     <span
       className="scene-float absolute right-2 bottom-6 grid size-11 place-items-center rounded-[14px] border border-line text-muted"
-      style={{ background: 'var(--bg-elevated)', boxShadow: 'var(--edge), var(--sh-soft)', animationDelay: '0.9s' }}
+      style={{
+        background: 'var(--bg-elevated)',
+        boxShadow: 'var(--edge), var(--sh-soft)',
+        animationDelay: '0.9s',
+      }}
     >
       <DevicePhoneMobileIcon className="size-5" />
     </span>

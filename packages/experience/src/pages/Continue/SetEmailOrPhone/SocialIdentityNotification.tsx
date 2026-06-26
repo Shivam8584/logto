@@ -1,7 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { z } from 'zod';
 
 import type { VerificationCodeIdentifier } from '@/types';
 import { registeredSocialIdentityStateGuard } from '@/types/guard';

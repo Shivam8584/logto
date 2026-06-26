@@ -106,10 +106,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
   return (
     <form
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
       onSubmit={onSubmitHandler}
     >
       <Controller
@@ -158,9 +155,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
           />
         )}
       />
-      {errorMessage && (
-        <ErrorMessage className="mb-4 ms-0.5 mt-0">{errorMessage}</ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className="mb-4 ms-0.5 mt-0">{errorMessage}</ErrorMessage>}
       {showSingleSignOnForm && (
         <div className="mb-4 text-sm text-muted">{t('description.single_sign_on_enabled')}</div>
       )}

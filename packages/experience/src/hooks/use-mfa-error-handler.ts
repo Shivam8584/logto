@@ -1,7 +1,6 @@
 import { MfaFactor, SignInIdentifier, type RequestErrorBody } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
@@ -132,7 +131,7 @@ const useMfaErrorHandler = ({ replace, verificationBasePath }: Options = {}) => 
           return;
         }
 
-        const { data: data } = mfaErrorDataGuard.safeParse(error.data);
+        const { data } = mfaErrorDataGuard.safeParse(error.data);
         const factors = data?.availableFactors ?? [];
         const skippable = data?.skippable;
         const maskedIdentifiers = data?.maskedIdentifiers;

@@ -36,7 +36,9 @@ const OrganizationSelector = ({
 
   return (
     <div className={className}>
-      <div className="text-sm font-medium mb-2">{t(`description.authorize_organization_access`)}</div>
+      <div className="text-sm font-medium mb-2">
+        {t(`description.authorize_organization_access`)}
+      </div>
       {resourceScopes && resourceScopes.length > 0 && (
         <div className="border border-line border-b-0 rounded-t-[10px] py-2">
           {resourceScopes

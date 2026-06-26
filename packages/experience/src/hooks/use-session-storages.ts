@@ -56,6 +56,7 @@ const useSessionStorage = () => {
       const { error, data: rawValue } = valueGuard[key].safeParse(
         (() => {
           try {
+            // eslint-disable-next-line no-restricted-syntax
             return JSON.parse(value) as unknown;
           } catch {
             return value;

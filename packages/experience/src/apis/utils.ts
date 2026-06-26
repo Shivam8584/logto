@@ -1,5 +1,4 @@
 import { InteractionEvent, type VerificationCodeIdentifier } from '@logto/schemas';
-import { z } from 'zod';
 
 import { type ContinueFlowInteractionEvent, UserFlow } from '@/types';
 import { continueFlowStateGuard } from '@/types/guard';

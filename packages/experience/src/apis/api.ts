@@ -5,7 +5,7 @@ import { searchKeys } from '@/shared/utils/search-parameters';
 
 export default ky.extend({
   hooks: {
-    // v2: hooks now receive a single state object instead of positional args.
+    // V2: hooks now receive a single state object instead of positional args.
     beforeRequest: [
       ({ request }) => {
         request.headers.set('Accept-Language', i18next.language);

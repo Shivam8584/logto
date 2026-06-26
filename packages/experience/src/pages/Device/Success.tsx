@@ -1,6 +1,5 @@
-import { useTranslation } from 'react-i18next';
-
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 
 import StaticPageLayout from '@/Layout/StaticPageLayout';
 import PageMeta from '@/shared/components/PageMeta';

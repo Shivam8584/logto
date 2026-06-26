@@ -114,10 +114,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
 
   return (
     <form
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
       onSubmit={onSubmitHandler}
     >
       <Controller
@@ -168,9 +165,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         />
       )}
 
-      {errorMessage && (
-        <ErrorMessage className="mb-4 ms-0.5 mt-0">{errorMessage}</ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className="mb-4 ms-0.5 mt-0">{errorMessage}</ErrorMessage>}
 
       {isForgotPasswordEnabled && !showSingleSignOnForm && (
         <ForgotPasswordLink

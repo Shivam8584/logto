@@ -12,6 +12,8 @@ export type Props = {
   readonly isDisabled?: boolean;
   readonly isLoading?: boolean;
   readonly className?: string;
+  // Part of the public button API and passed by callers (e.g. SSO connector name); not rendered directly.
+  // eslint-disable-next-line react/no-unused-prop-types
   readonly target: string;
   readonly logo: string;
   readonly name: Record<string, string>;

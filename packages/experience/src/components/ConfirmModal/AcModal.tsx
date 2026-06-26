@@ -35,7 +35,7 @@ const AcModal = ({
       shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
       role="dialog"
       isOpen={isOpen}
-      // react-modal injects inline default styles (a white overlay background +
+      // React-modal injects inline default styles (a white overlay background +
       // absolutely-positioned content) when no `style` is passed. Inline styles
       // win over `overlayClassName`, so the `--color-bg-mask` scrim never shows
       // and the page bleeds through behind the dialog. Empty objects drop those
@@ -45,10 +45,7 @@ const AcModal = ({
         'absolute w-[600px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 outline-none rounded-[16px] focus-visible:outline-none max-[640px]:w-[calc(100%-40px)]',
         className
       )}
-      overlayClassName={classNames(
-        'fixed inset-0 bg-[var(--color-bg-mask)]',
-        'z-[var(--z-modal)]'
-      )}
+      overlayClassName={classNames('fixed inset-0 bg-[var(--color-bg-mask)]', 'z-[var(--z-modal)]')}
       onAfterOpen={() => {
         contentRef.current?.focus();
       }}

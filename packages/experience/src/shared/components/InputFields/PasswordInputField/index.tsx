@@ -1,9 +1,8 @@
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import type { Nullable } from '@silverhand/essentials';
 import type { KeyboardEvent, Ref } from 'react';
 import { forwardRef, useRef, useImperativeHandle, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 import IconButton from '@/shared/components/IconButton';
 
@@ -22,7 +21,7 @@ const PasswordInputField = (props: Props, forwardRef: Ref<Nullable<HTMLInputElem
   useImperativeHandle(forwardRef, () => innerRef.current);
 
   const detectCapsLock = (event: KeyboardEvent<HTMLInputElement>) => {
-    setIsCapsLockOn(event.getModifierState?.('CapsLock') ?? false);
+    setIsCapsLockOn(event.getModifierState('CapsLock'));
   };
 
   return (
@@ -37,11 +36,7 @@ const PasswordInputField = (props: Props, forwardRef: Ref<Nullable<HTMLInputElem
               setShowPassword((previous) => !previous);
             }}
           >
-            {showPassword ? (
-              <EyeIcon className="w-5 h-5" />
-            ) : (
-              <EyeSlashIcon className="w-5 h-5" />
-            )}
+            {showPassword ? <EyeIcon className="w-5 h-5" /> : <EyeSlashIcon className="w-5 h-5" />}
           </IconButton>
         }
         {...props}

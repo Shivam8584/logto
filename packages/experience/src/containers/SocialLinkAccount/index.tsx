@@ -45,9 +45,12 @@ const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser
   const { signUpMethods, signInMode } = useSieMethods();
 
   const bindSocialRelatedUser = useBindSocialRelatedUser();
-  const [isBindingUser, setIsBindingUser] = useState(false);
-
   const registerWithSocial = useSocialRegister(connectorId);
+
+  // One action at a time: both the Bind button and the "create account without
+  // linking" link submit against the same verificationId, so a second concurrent
+  // call would 4xx against a consumed id and surface a confusing error.
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const actionText = getCreateAccountActionText(signUpMethods);
 
@@ -55,10 +58,7 @@ const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser
 
   return (
     <div
-      className={classNames(
-        'flex flex-col items-center justify-center [&>*]:w-full',
-        className
-      )}
+      className={classNames('flex flex-col items-center justify-center [&>*]:w-full', className)}
     >
       <div className="text-sm text-muted text-start mobile:mb-2 desktop:mb-4">
         {t('description.social_bind_with_existing')}
@@ -67,11 +67,17 @@ const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser
       <Button
         title="action.bind"
         i18nProps={{ address: type === 'email' ? maskEmail(value) : maskPhone(value) }}
-        isLoading={isBindingUser}
+        isLoading={isSubmitting}
         onClick={async () => {
-          setIsBindingUser(true);
-          await bindSocialRelatedUser(verificationId);
-          setIsBindingUser(false);
+          if (isSubmitting) {
+            return;
+          }
+          setIsSubmitting(true);
+          try {
+            await bindSocialRelatedUser(verificationId);
+          } finally {
+            setIsSubmitting(false);
+          }
         }}
       />
 
@@ -82,8 +88,16 @@ const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser
           </div>
           <TextLink
             text={actionText}
-            onClick={() => {
-              void registerWithSocial(verificationId);
+            onClick={async () => {
+              if (isSubmitting) {
+                return;
+              }
+              setIsSubmitting(true);
+              try {
+                await registerWithSocial(verificationId);
+              } finally {
+                setIsSubmitting(false);
+              }
             }}
           />
         </div>

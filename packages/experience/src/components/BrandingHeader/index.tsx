@@ -45,11 +45,7 @@ const BrandingHeader = ({
           )}
           {shouldConnectSvg && <ConnectIcon className="text-line-strong mx-3" />}
           {logo && (
-            <img
-              className="h-8 w-auto object-contain object-center"
-              alt="app logo"
-              src={logo}
-            />
+            <img className="h-8 w-auto object-contain object-center" alt="app logo" src={logo} />
           )}
         </div>
       )}

@@ -101,13 +101,9 @@ const SingleSignOnForm = ({ isTermsAndPrivacyCheckboxVisible }: Props) => {
         )}
       />
 
-      {errorMessage && (
-        <ErrorMessage className="mb-4 ms-0.5">{errorMessage}</ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className="mb-4 ms-0.5">{errorMessage}</ErrorMessage>}
 
-      {Boolean(isTermsAndPrivacyCheckboxVisible) && (
-        <TermsAndPrivacyCheckbox className="mb-4" />
-      )}
+      {Boolean(isTermsAndPrivacyCheckboxVisible) && <TermsAndPrivacyCheckbox className="mb-4" />}
 
       <Button
         title="action.single_sign_on"
