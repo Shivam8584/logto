@@ -181,14 +181,16 @@ jobs:
       - name: Prepack alteration
         working-directory: ./alteration
         # The alteration tree is an old release tag whose package.json pins an
-        # engines range (e.g. `pnpm: ^9 || ^10`) the current runner's pnpm 11 no
-        # longer satisfies. Relax the engine check for this historical install
-        # only; the fresh tree above is current HEAD and stays strict.
-        # NB: the `--config.engine-strict=false` CLI flag is unreliable under
-        # pnpm 11 — the npm-config env var is the form pnpm honours.
-        env:
-          npm_config_engine_strict: 'false'
-        run: pnpm i && pnpm prepack
+        # engines range (e.g. `pnpm: ^9 || ^10`, `node: ^22`) the current runner's
+        # pnpm 11 / Node 24 no longer satisfies. pnpm 11 ignores both the
+        # `--config.engine-strict=false` flag and `npm_config_engine_strict` for
+        # the `engines` field (pnpm/pnpm#8869), so strip `engines` from every
+        # manifest in this historical tree before installing. This affects only
+        # the throwaway alteration checkout; the fresh tree above stays strict.
+        run: |
+          find . -name package.json -not -path '*/node_modules/*' -print0 \
+            | xargs -0 -I{} node -e "const f='{}';const fs=require('fs');const p=JSON.parse(fs.readFileSync(f));delete p.engines;fs.writeFileSync(f,JSON.stringify(p,null,2)+'\n')"
+          pnpm i && pnpm prepack
       # ** End **
 
       - name: Setup Postgres
