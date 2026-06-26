@@ -1,106 +1,103 @@
 import { useLogto } from '@logto/react';
 import { render, screen, waitFor } from '@testing-library/react';
-import type * as React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import useSWR from 'swr';
+import { vi } from 'vitest';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 
 import AcceptInvitation from '.';
 
-jest.mock('swr', () => ({
+vi.mock('swr', () => ({
   __esModule: true,
-  default: jest.fn(),
+  default: vi.fn(),
 }));
 
-jest.mock('@logto/react', () => ({
-  useLogto: jest.fn(),
+vi.mock('@logto/react', () => ({
+  useLogto: vi.fn(),
 }));
 
 const mockCloudApi = {
-  get: jest.fn(),
-  patch: jest.fn(),
+  get: vi.fn(),
+  patch: vi.fn(),
 };
 const mockSilentCloudApi = {
-  get: jest.fn(),
-  patch: jest.fn(),
+  get: vi.fn(),
+  patch: vi.fn(),
 };
 
-jest.mock('@/cloud/hooks/use-cloud-api', () => ({
-  useCloudApi: jest.fn((options?: { readonly hideErrorToast?: boolean }) =>
+vi.mock('@/cloud/hooks/use-cloud-api', () => ({
+  useCloudApi: vi.fn((options?: { readonly hideErrorToast?: boolean }) =>
     options?.hideErrorToast ? mockSilentCloudApi : mockCloudApi
   ),
 }));
 
-jest.mock('@/hooks/use-redirect-uri', () => ({
+vi.mock('@/hooks/use-redirect-uri', () => ({
   __esModule: true,
-  default: jest.fn(() => new URL('/callback', window.location.origin)),
+  default: vi.fn(() => new URL('/callback', window.location.origin)),
 }));
 
-jest.mock('@/contexts/TenantsProvider', () => {
-  const { createContext } = jest.requireActual<typeof React>('react');
+vi.mock('@/contexts/TenantsProvider', async () => {
+  const { createContext } = await vi.importActual<typeof import('react')>('react');
 
   return {
     TenantsContext: createContext({
-      navigateTenant: jest.fn(),
-      resetTenants: jest.fn(),
+      navigateTenant: vi.fn(),
+      resetTenants: vi.fn(),
     }),
   };
 });
 
-jest.mock('@/utils/storage', () => ({
-  saveRedirect: jest.fn(),
+vi.mock('@/utils/storage', () => ({
+  saveRedirect: vi.fn(),
 }));
 
-jest.mock('@/components/AppLoading', () => ({
+vi.mock('@/components/AppLoading', () => ({
   __esModule: true,
   default: () => <div>loading</div>,
 }));
 
-jest.mock('@/components/AppError', () => ({
+vi.mock('@/components/AppError', () => ({
   __esModule: true,
   default: ({ errorMessage }: { readonly errorMessage: string }) => <div>{errorMessage}</div>,
 }));
 
-jest.mock('./SwitchAccount', () => ({
+vi.mock('./SwitchAccount', () => ({
   __esModule: true,
   default: () => <button type="button">switch account</button>,
 }));
 
-const mockedUseLogto = jest.mocked(useLogto);
-const mockedUseCloudApi = jest.mocked(useCloudApi);
-const mockedUseSWR = jest.mocked(useSWR);
+const mockedUseLogto = vi.mocked(useLogto);
+const mockedUseCloudApi = vi.mocked(useCloudApi);
+const mockedUseSWR = vi.mocked(useSWR);
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+vi.mock('react-router-dom', async () => ({
+  ...(await vi.importActual<typeof import('react-router-dom')>('react-router-dom')),
   useParams: () => ({ invitationId: 'invitation-id' }),
 }));
 
 const renderAcceptInvitation = (entry: string) =>
   render(
-    <MemoryRouter
-      future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
-      initialEntries={[entry]}
-    >
+    <MemoryRouter initialEntries={[entry]}>
       <AcceptInvitation />
     </MemoryRouter>
   );
 
 describe('AcceptInvitation', () => {
-  const requestSubmit = jest.fn();
+  const requestSubmit = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.spyOn(HTMLFormElement.prototype, 'requestSubmit').mockImplementation(requestSubmit);
+    vi.clearAllMocks();
+    vi.spyOn(HTMLFormElement.prototype, 'requestSubmit').mockImplementation(requestSubmit);
     mockedUseLogto.mockReturnValue({
       isLoading: false,
       isAuthenticated: true,
-      signIn: jest.fn(),
+      signIn: vi.fn(),
     } as unknown as ReturnType<typeof useLogto>);
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('loads the invitation details with error toast suppressed', async () => {
