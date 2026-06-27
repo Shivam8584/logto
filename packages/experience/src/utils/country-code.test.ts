@@ -21,8 +21,10 @@ describe('country-code', () => {
 
     expect(getDefaultCountryCode()).toEqual('CN');
 
+    // Hypedrive is India-first: bare `en` maps to IN (a region-qualified locale like
+    // en-US / en-CA below still wins when present).
     await i18next.changeLanguage('en');
-    expect(getDefaultCountryCode()).toEqual('US');
+    expect(getDefaultCountryCode()).toEqual('IN');
 
     await i18next.changeLanguage('zh-CN');
     expect(getDefaultCountryCode()).toEqual('CN');
@@ -50,8 +52,9 @@ describe('country-code', () => {
     await i18next.changeLanguage('zh');
     expect(getDefaultCountryCallingCode()).toEqual('86');
 
+    // India-first: bare `en` -> IN (+91); region-qualified en-US / en-CA below still win.
     await i18next.changeLanguage('en');
-    expect(getDefaultCountryCallingCode()).toEqual('1');
+    expect(getDefaultCountryCallingCode()).toEqual('91');
 
     await i18next.changeLanguage('zh-CN');
     expect(getDefaultCountryCallingCode()).toEqual('86');

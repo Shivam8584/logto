@@ -1,6 +1,5 @@
-import type { Config } from '@jest/types';
-
-const config: Config.InitialOptions = {
+/** @type {import('jest').Config} */
+const config = {
   roots: ['<rootDir>/src'],
   testEnvironment: 'jsdom',
   // Polyfills must load before module imports that need them (e.g. ky v2's TextEncoder use).

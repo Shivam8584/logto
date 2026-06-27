@@ -26,3 +26,6 @@ Files orphaned (imported nowhere across the package) and moved out of `src/`:
 - `packages/console/src/components/PlanUsage/PlanUsageCard/` (`index.tsx` + `index.module.scss`) — `PlanUsageCard` (stub returning null); imported nowhere.
 Also removed (declarations only, files kept): `LogtoEnterpriseResponse` type from `cloud/types/router.ts`; `inkeepApiKey` from `consts/env.ts`; and from `components/PlanUsage/utils.ts` the dead exports `usageKeyPriceMap`, `formatNumber`, `getUsageByKey`, `getQuotaByKey`, `getToolTipByKey`, `shouldHideQuotaNotice` plus their now-orphaned locals (`tooltipKeyMap`, `enterpriseTooltipKeyMap`, `isRbacEnabled`) and now-unused imports.
 - turbo.json — removed 2026-06-26; fork dropped turbo (which needed a packageManager field that clashed with the CI pnpm-action) in favor of upstream's native `pnpm -r` runner.
+
+## CI test-config fixes (2026-06-27)
+- `packages/account/jest.config.ts` & `packages/experience/jest.config.ts` — replaced by sibling `jest.config.js` (committed). The `.ts` configs required `ts-node` (undeclared, only transitively present → CI `main-test` crashed: "ts-node is required for the TypeScript configuration files"). The `.js` form (matching packages/core) needs no ts-node. Kept here for reference; jest can't have both `.ts` and `.js` configs in one package.

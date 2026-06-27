@@ -4,10 +4,12 @@
   display: flex;
   align-items: center;
 
-  // Apply the canvas-measured placeholder width (exposed as a custom property by
-  // index.tsx) here rather than inline, so the mobile media query can drop it
-  // cleanly without `!important`.
-  > :first-child {
+  // Apply the canvas-measured placeholder width (exposed as the `--search-min-width`
+  // custom property on the wrapper by index.tsx) to the TextInput. The input is the
+  // 2nd child — the 1st is the hidden measuring <canvas> — so target it explicitly
+  // rather than `:first-child`. Done here (not inline) so the phone media query can
+  // drop it cleanly without `!important`.
+  > :nth-child(2) {
     min-width: var(--search-min-width, 0);
   }
 
@@ -15,9 +17,8 @@
     flex-wrap: wrap;
     gap: _.unit(2);
 
-    // The TextInput is the first child; let it take the full row and shrink to
-    // full width, ignoring the desktop min-width.
-    > :first-child {
+    // Let the input take the full row and shrink, ignoring the desktop min-width.
+    > :nth-child(2) {
       flex: 1 1 100%;
       min-width: 0;
     }
@@ -29,7 +30,9 @@
     }
   }
 
-  >:not(:first-child) {
+  // The hidden canvas is the first child, so the visible row's first real control
+  // is the input (2nd child) — space every following control (the buttons) from it.
+  > :nth-child(n + 3) {
     margin-inline-start: _.unit(2);
   }
 

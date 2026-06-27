@@ -100,7 +100,10 @@ const RegisterFooter = () => {
         // button so the primary field stays an unambiguous email/username entry.
         (() => {
           const hasPhone = signUpMethods.includes(SignInIdentifier.Phone);
-          const hasSocial = socialConnectors.length > 0;
+          // Social is an *alternate* here only when an inline sign-up form exists. With no
+          // sign-up methods, the body already renders the social list as the primary option,
+          // so showing it again in the footer would duplicate every social button.
+          const hasSocial = socialConnectors.length > 0 && signUpMethods.length > 0;
           const hasNonPhoneInline = signUpMethods.some(
             (identifier) => identifier !== SignInIdentifier.Phone
           );

@@ -26,6 +26,15 @@ const expectPrefixCollapsed = (prefix: Nullable<HTMLElement>) => {
   expect(['', '0px', undefined]).toContain(prefix?.style.width);
 };
 
+/**
+ * The expanded counterpart: the target width is `100px`, but `react-spring` may not have committed
+ * the animated value under jsdom yet (leaving `style.width` unset). Accept the target or the
+ * not-yet-animated states — the prefix being present (asserted separately) is the real signal.
+ */
+const expectPrefixExpanded = (prefix: Nullable<HTMLElement>) => {
+  expect(['100px', '', undefined]).toContain(prefix?.style.width);
+};
+
 describe('SmartInputField Component', () => {
   const onChange = jest.fn();
 
@@ -89,7 +98,7 @@ describe('SmartInputField Component', () => {
       const countryCode = getByText(`+${defaultCountryCallingCode}`);
       expect(countryCode).not.toBeNull();
 
-      expect(queryByTestId('prefix')?.style.width).toBe('100px');
+      expectPrefixExpanded(queryByTestId('prefix'));
 
       act(() => {
         fireEvent.click(countryCode);

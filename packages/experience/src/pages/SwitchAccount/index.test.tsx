@@ -111,7 +111,10 @@ describe('SwitchAccount', () => {
     });
 
     fireEvent.click(getByText('action.back_to_current_account'));
-    expect(assign).toHaveBeenCalledWith('https://example.com');
+    // Returns via the FULL redirect URI (keeping the OIDC continuation), using
+    // location.assign — not history navigation — so we never land back on a
+    // token-bearing entry.
+    expect(assign).toHaveBeenCalledWith('https://example.com/callback');
     expect(navigate).not.toHaveBeenCalled();
   });
 });

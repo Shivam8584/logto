@@ -104,7 +104,10 @@ const SignInFooters = () => {
           const hasPhone = signInMethods.some(
             ({ identifier }) => identifier === SignInIdentifier.Phone
           );
-          const hasSocial = socialConnectors.length > 0;
+          // Social is an *alternate* here only when an inline sign-in form exists. With no
+          // sign-in methods, `Main` already renders the social list as the primary option,
+          // so showing it again in the footer would duplicate every social button.
+          const hasSocial = socialConnectors.length > 0 && signInMethods.length > 0;
           // Only worth a divider/alt-section when the inline form has a non-phone method
           // to be the primary path (otherwise phone is already the inline form).
           const hasNonPhoneInline = signInMethods.some(

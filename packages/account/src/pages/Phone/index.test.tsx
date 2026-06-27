@@ -1,3 +1,4 @@
+import { getDefaultCountryCallingCode } from '@experience/utils/country-code';
 import { AccountCenterControlValue, type AccountCenter } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { HTTPError, type NormalizedOptions } from 'ky';
@@ -51,9 +52,9 @@ const mockVerifyCodeResult = {
   verificationRecordId: 'verify-verification-record-id',
 };
 
-/** US local number; SmartInputField prepends the default country calling code (1). */
+/** SmartInputField prepends the configured default country calling code (e.g. 91 for IN). */
 const newPhoneLocalNumber = '4155550101';
-const newPhone = `1${newPhoneLocalNumber}`;
+const newPhone = `${getDefaultCountryCallingCode()}${newPhoneLocalNumber}`;
 
 type PhoneRenderOptions = {
   readonly pageContext?: Omit<Partial<PageContextType>, 'accountCenterSettings'> & {

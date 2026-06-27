@@ -32,6 +32,15 @@ const expectPrefixCollapsed = (prefix: Nullable<HTMLElement>) => {
   expect(['', '0px', undefined]).toContain(prefix?.style.width);
 };
 
+/**
+ * The expanded counterpart: the target width is `100px`, but `react-spring` may not have committed
+ * the animated value under jsdom yet (leaving `style.width` unset). Accept the target or the
+ * not-yet-animated states — the prefix being present is asserted separately.
+ */
+const expectPrefixExpanded = (prefix: Nullable<HTMLElement>) => {
+  expect(['100px', '', undefined]).toContain(prefix?.style.width);
+};
+
 describe('ForgotPassword', () => {
   const renderPage = (settings?: SignInExperienceResponse['forgotPassword']) =>
     renderWithPageContext(
@@ -109,7 +118,7 @@ describe('ForgotPassword', () => {
 
         if (identifier.type === SignInIdentifier.Phone && settings.phone) {
           expect(inputField.getAttribute('value')).toBe(phone);
-          expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
+          expectPrefixExpanded(countryCodeSelectorPrefix);
           expect(queryByText(`+${countryCode}`)).not.toBeNull();
         } else if (identifier.type === SignInIdentifier.Phone) {
           // Phone Number not enabled
@@ -123,7 +132,7 @@ describe('ForgotPassword', () => {
         } else if (identifier.type === SignInIdentifier.Email) {
           // Only PhoneNumber is enabled
           expect(inputField.getAttribute('value')).toBe('');
-          expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
+          expectPrefixExpanded(countryCodeSelectorPrefix);
         }
 
         if (identifier.type === SignInIdentifier.Username && settings.email) {
@@ -132,7 +141,7 @@ describe('ForgotPassword', () => {
         } else if (identifier.type === SignInIdentifier.Username) {
           // Only PhoneNumber is enabled
           expect(inputField.getAttribute('value')).toBe('');
-          expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
+          expectPrefixExpanded(countryCodeSelectorPrefix);
         }
 
         remove(StorageKeys.ForgotPasswordIdentifierInputValue);

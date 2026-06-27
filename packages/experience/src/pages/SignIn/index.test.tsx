@@ -55,8 +55,10 @@ describe('<SignIn />', () => {
 
       expect(queryByText('action.sign_in')).not.toBeNull();
 
-      // Social
-      expect(queryAllByText('action.sign_in_with')).toHaveLength(
+      // Social. Count the social provider logo images rather than the shared
+      // `action.sign_in_with` text — the "Continue with phone" button (shown when phone
+      // is a method) reuses that same key but renders an icon, not a logo <img>.
+      expect(container.querySelectorAll('button img')).toHaveLength(
         mockSignInExperienceSettings.socialConnectors.length
       );
     });
