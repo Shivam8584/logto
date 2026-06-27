@@ -94,7 +94,10 @@ jobs:
 
   main-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # The core package alone has ~228 jest suites (many are heavy route tests at
+    # 30-60s each); the full run lands well over 30m on a 2-core runner. 60m lets it
+    # complete while still hard-stopping any genuine hang far short of the 6h ceiling.
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v4
