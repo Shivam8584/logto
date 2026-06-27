@@ -118,9 +118,25 @@ export const consent = async ({
 
   const { accountId } = session;
 
-  const grant =
-    conditional(grantId && (await provider.Grant.find(grantId))) ??
-    new provider.Grant({ accountId, clientId });
+  const foundGrant = conditional(grantId && (await provider.Grant.find(grantId)));
+  const grant = foundGrant ?? new provider.Grant({ accountId, clientId });
+
+  // TEMP-DEBUG (step-up reduced-grant investigation): capture, on a real step-up,
+  // whether consent reuses an existing grant or starts fresh, and the scopes it
+  // was handed. Remove once the root fix lands.
+  // eslint-disable-next-line no-console
+  console.warn(
+    '[STEPUP-DEBUG2] consent',
+    JSON.stringify({
+      promptName: interactionDetails.prompt.name,
+      grantIdFromInteraction: grantId,
+      grantWasFound: Boolean(foundGrant),
+      requestedScope: interactionDetails.params.scope,
+      requestedResource: interactionDetails.params.resource,
+      missingOIDCScopes,
+      resourceScopesToGrant,
+    })
+  );
 
   await Promise.all([
     saveUserFirstConsentedAppId(queries, accountId, clientId),
