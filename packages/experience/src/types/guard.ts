@@ -77,7 +77,11 @@ const mfaFactorEnumValues = [
 export const mfaErrorDataGuard = z.object({
   availableFactors: mfaFactorsGuard,
   skippable: z.boolean().optional(),
-  maskedIdentifiers: z.record(z.enum(mfaFactorEnumValues), z.string()).optional(),
+  // `z.record(z.enum(...))` is EXHAUSTIVE in zod v4 (requires every enum key), but the
+  // backend only sends the masked identifier for the enrolled factor(s). Use `partialRecord`
+  // so a single-factor payload (e.g. phone-only) still parses. See git f719dc1a9: the original
+  // `s.record(s.enums(...))` was partial; the s.*->z.* migration silently changed the semantics.
+  maskedIdentifiers: z.partialRecord(z.enum(mfaFactorEnumValues), z.string()).optional(),
   // Whether this MFA flow is an optional suggestion (e.g., add another factor after sign-up)
   suggestion: z.boolean().optional(),
   // Whether the current WebAuthn factor is used as a sign-in passkey.
