@@ -57,7 +57,13 @@ const OneTimeToken = () => {
       ) {
         navigate(
           { pathname: `/${experience.routes.oneTimeToken}/error` },
-          { replace: true, state: { errorMessage: 'terms_acceptance_required_description' } }
+          {
+            replace: true,
+            state: {
+              title: 'error.terms_acceptance_required',
+              message: 'error.terms_acceptance_required_description',
+            },
+          }
         );
         return;
       }

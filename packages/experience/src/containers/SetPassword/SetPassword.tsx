@@ -136,6 +136,7 @@ const SetPassword = ({
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         label={t('input.confirm_password')}
+        isDanger={!!errors.confirmPassword}
         errorMessage={errors.confirmPassword?.message}
         aria-invalid={!!errors.confirmPassword}
         {...registerWithCapsLock('confirmPassword', {

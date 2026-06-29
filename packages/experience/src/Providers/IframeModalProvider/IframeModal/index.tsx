@@ -17,11 +17,11 @@ const IframeModal = ({ className, title = '', href = '', onClose }: ModalProps) 
   const [isLoaded, setIsLoaded] = useState(false);
   const loadingBarRef = useRef<LoadingBarRef>(null);
 
-  // Read the live brand colour from the cascade (falls back to the near-black
-  // primary, never the old Logto purple).
+  // Read the live brand colour from the cascade (falls back to the blue accent,
+  // never the old Logto purple).
   const brandingColor =
     getComputedStyle(document.documentElement).getPropertyValue('--color-brand-default').trim() ||
-    '#0e1116';
+    '#2563eb';
 
   return (
     <ReactModal

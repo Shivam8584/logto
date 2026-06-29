@@ -10,6 +10,7 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
+import { UserFlow } from '@/types';
 
 const useRegisterWithUsername = () => {
   const navigate = useNavigateWithPreservedSearchParams();
@@ -65,9 +66,11 @@ const useRegisterWithUsername = () => {
       }
 
       // If password is required and no secondary identifiers are present, (current behavior without multi-sign-up identifiers support)
-      // navigate to password screen directly
+      // navigate to password screen directly. Use an ABSOLUTE path: this form mounts on
+      // both /register and /identifier-register, and a bare relative 'password' would
+      // resolve to /identifier-register/password (a dead route → 404) from the latter.
       if (passwordRequiredForSignUp && secondaryIdentifiers.length === 0) {
-        navigate('password');
+        navigate(`/${UserFlow.Register}/password`);
         return;
       }
 

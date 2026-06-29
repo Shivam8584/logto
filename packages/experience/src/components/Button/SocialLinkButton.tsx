@@ -44,7 +44,7 @@ const SocialLinkButton = ({
         buttonBaseClass,
         'btn-ghost',
         'w-full',
-        'grid grid-cols-[auto_1fr] items-center px-4 gap-3 desktop:hover:not-disabled:not-active:shadow-[inset_0_1px_0_var(--btn-edge),var(--sh-soft)] desktop:hover:not-disabled:not-active:-translate-y-px',
+        'grid grid-cols-[auto_1fr] items-center px-4 gap-3 desktop:hover:not-disabled:not-active:shadow-[inset_0_1px_0_var(--btn-edge),var(--sh-soft)] desktop:hover:not-disabled:not-active:border-[var(--border-strong)]',
         (isDisabled ?? isLoadingActive) && buttonDisabledClass,
         className
       )}

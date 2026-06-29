@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#e11d48" />
+  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
   <meta name="robots" content="noindex,nofollow" />
   <title>Sign in</title>
   <script>
@@ -35,15 +36,13 @@
           && window.matchMedia('(prefers-color-scheme: dark)').matches;
         theme = (darkOk && prefersDark) ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', theme);
-        // Hypedrive brand is a fixed neutral near-black — pin it before paint so
-        // the tenant's configured (purple) primary colour never flashes in.
-        // Also pin the static design-token primary + its contrast so the primary
-        // button has correct (inverted) colours on the first frame in dark mode.
-        var brand = theme === 'dark' ? '#fafafa' : '#0e1116';
-        document.body.style.setProperty('--color-brand-default', brand);
-        document.body.style.setProperty('--primary', brand);
-        document.body.style.setProperty('--primary-contrast', theme === 'dark' ? '#0e1116' : '#ffffff');
-        document.body.style.setProperty('--btn-edge', theme === 'dark' ? 'rgba(255,255,255,0)' : 'rgba(255,255,255,0.85)');
+        // Brand-neutral system: the accent is a fixed blue (not the tenant's configured
+        // primary). Pin it before paint so the tenant's colour never flashes in, and so
+        // the primary CTA has its correct accent + contrast on the very first frame.
+        var accent = theme === 'dark' ? '#3b82f6' : '#2563eb';
+        document.body.style.setProperty('--color-brand-default', accent);
+        document.body.style.setProperty('--primary', accent);
+        document.body.style.setProperty('--primary-contrast', '#ffffff');
       } catch (e) { /* noop */ }
     })();
   </script>

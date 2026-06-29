@@ -1,4 +1,6 @@
 import { type SignInIdentifier, VerificationType } from '@logto/schemas';
+import { isObject } from '@silverhand/essentials';
+import { HTTPError } from 'ky';
 import { useCallback, useContext, useMemo, useState } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
@@ -9,7 +11,7 @@ import { UserFlow } from '@/types';
 import type { IdentifierPasskeyState } from '@/types/guard';
 
 import useApi from './use-api';
-import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
+import useErrorHandler from './use-error-handler';
 import useToast from './use-toast';
 
 type Props = {
@@ -38,19 +40,6 @@ const useStartIdentifierPasskeySignInProcessing = ({ hideErrorToast }: Props) =>
   const [isProcessing, setIsProcessing] = useState(false);
   const handleError = useErrorHandler();
 
-  const errorHandlers: ErrorHandlers = useMemo(
-    () => ({
-      'session.mfa.webauthn_verification_not_found': async (error) => {
-        // No passkeys registered
-        if (!hideErrorToast) {
-          setToast(error.message);
-        }
-        // Do nothing and silently fall back to other methods if hideErrorToast is true
-      },
-    }),
-    [setToast, hideErrorToast]
-  );
-
   /**
    * @returns
    * `true` if passkey flow was started
@@ -70,11 +59,28 @@ const useStartIdentifierPasskeySignInProcessing = ({ hideErrorToast }: Props) =>
       const [error, result] = await asyncCreateAuthentication(identifier);
       setIsProcessing(false);
 
-      // If user has no passkeys registered, return false so caller can fall back
-      // to other verification methods (password, verification code)
       if (error) {
-        await handleError(error, errorHandlers);
-        return false;
+        // Only the "no passkeys registered" case is a legitimate reason to fall back to
+        // password / verification code. For any OTHER error (network, 5xx, rate-limit),
+        // we surface a toast and return `undefined` so the caller does NOT silently
+        // proceed as if the user simply had no passkey — falling back there would just
+        // hit the same failing backend and hide the real cause.
+        const userHasNoPasskey =
+          error instanceof HTTPError &&
+          isObject(error.data) &&
+          'code' in error.data &&
+          error.data.code === 'session.mfa.webauthn_verification_not_found';
+
+        await handleError(error, {
+          // No passkeys registered: toast only when not suppressed, then fall back.
+          'session.mfa.webauthn_verification_not_found': async (innerError) => {
+            if (!hideErrorToast) {
+              setToast(innerError.message);
+            }
+          },
+        });
+
+        return userHasNoPasskey ? false : undefined;
       }
 
       if (result) {
@@ -92,11 +98,12 @@ const useStartIdentifierPasskeySignInProcessing = ({ hideErrorToast }: Props) =>
     [
       abortConditionalUI,
       asyncCreateAuthentication,
-      errorHandlers,
       handleError,
+      hideErrorToast,
       isProcessing,
       navigate,
       setHasBoundPasskey,
+      setToast,
       setVerificationId,
     ]
   );

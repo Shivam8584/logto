@@ -57,6 +57,7 @@ const WebAuthnVerification = () => {
       <SwitchMfaFactorsLink
         flow={UserMfaFlow.MfaVerification}
         flowState={{ availableFactors, skippable }}
+        className="mt-6"
       />
     </SecondaryPageLayout>
   );

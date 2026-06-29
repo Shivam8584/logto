@@ -222,7 +222,7 @@ const Consent = () => {
         </div>
       )}
       <div className="items-center mt-6 flex justify-center gap-1">
-        {t('description.not_you')}{' '}
+        {t('description.not_you')}
         <TextLink replace to="/sign-in" text="action.use_another_account" />
       </div>
     </LandingPageLayout>

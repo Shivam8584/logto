@@ -48,8 +48,12 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
 
-      await onSubmit(code.join(''), props);
-      setIsSubmitting(false);
+      try {
+        await onSubmit(code.join(''), props);
+      } finally {
+        // Always reset, even if `onSubmit` throws, so the button never sticks.
+        setIsSubmitting(false);
+      }
     },
     [onSubmit, isSubmitting, props]
   );

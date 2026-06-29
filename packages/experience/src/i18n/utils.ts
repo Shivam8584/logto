@@ -1,5 +1,8 @@
 import type { LocalePhrase } from '@logto/phrases-experience';
-import resource from '@logto/phrases-experience';
+// Import ONLY the English locale (used as the offline fallback) instead of the package
+// barrel, which statically pulls in all ~20 languages and bloats the bundle by 300-500KB.
+// At runtime real phrases come from the API / SSR (see getPhrases above); this is fallback-only.
+import enFallback from '@logto/phrases-experience/lib/locales/en/index.js';
 import type { LanguageInfo } from '@logto/schemas';
 import { isObject } from '@silverhand/essentials';
 import type { Resource } from 'i18next';
@@ -50,7 +53,7 @@ export const getI18nResource = async (
   } catch {
     // Fallback to build in en
     return {
-      resources: { en: resource.en },
+      resources: { en: enFallback },
       lng: 'en',
     };
   }

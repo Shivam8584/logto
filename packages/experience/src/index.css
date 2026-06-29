@@ -9,38 +9,51 @@
   font-style: normal;
   font-display: swap;
   font-weight: 100 900;
-  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist:vf@latest/latin-wght-normal.woff2")
-    format("woff2-variations");
+  /* Self-hosted (latin subset, variable) — was a render-blocking jsdelivr CDN request.
+     Local hosting drops a third-party DNS+TLS handshake off the login critical path. */
+  src: url("./assets/fonts/geist-latin-wght-normal.woff2") format("woff2-variations");
 }
 
-/* ── Design tokens (mirrored from hypedrive-site-svelte/src/app.css) ── */
+/* ── Design tokens — brand-NEUTRAL auth system ──
+   A multi-tenant OAuth screen sits behind many third-party logos (Google, Apple,
+   GitHub…), so the shell deliberately carries no product brand. Palette = cool
+   zinc-tinted neutrals (the 2026 standard for technical products) + a single calm
+   blue accent. No purple/violet, no rose. Every component resolves through these
+   base vars, so retuning here re-themes the whole app. */
 :root {
   color-scheme: light;
-  --bg:            #fafbfc;
-  --bg-elevated:   #ffffff;
-  --surface:       #f1f3f6;
-  --surface-2:     #e7eaf0;
-  --text:          #0e1116;
-  --text-2:        #353b45;
-  --text-muted:    #5a626e;
-  --text-faint:    #767e8b;
-  --border:        #e2e6ec;
-  --border-strong: #ccd2dc;
-  --primary:          #0e1116;
-  --primary-hover:    #000000;
+  /* Cool zinc neutrals expressed in oklch — perceptually even steps so the grey
+     ramp reads as a smooth, intentional scale (the 2026 standard; Tailwind v4 is
+     oklch-native). Hue 264 = a faint cool/blue undertone shared with the accent. */
+  --bg:            oklch(0.985 0.001 264);   /* soft white canvas */
+  --bg-elevated:   oklch(1    0     264);    /* pure white card */
+  --surface:       oklch(0.967 0.002 264);
+  --surface-2:     oklch(0.922 0.004 264);
+  --text:          oklch(0.21  0.006 264);   /* near-black ink, not pure black */
+  --text-2:        oklch(0.37  0.006 264);
+  --text-muted:    oklch(0.55  0.006 264);
+  --text-faint:    oklch(0.70  0.006 264);
+  --border:        oklch(0.92  0.003 264);
+  --border-strong: oklch(0.87  0.004 264);
+  /* Accent — a single calm blue, exactly blue-600 (#2563eb) in oklch. Neutral
+     "infrastructure" colour that sits well behind any tenant / third-party OAuth
+     logo. Lightness-stepped hover/pressed keep an even perceptual gap. These mirror
+     the culori-derived values in use-color-theme.ts — keep the two in sync. */
+  --primary:          oklch(0.546 0.215 263);  /* blue-600 #2563eb */
+  --primary-hover:    oklch(0.488 0.217 264);  /* blue-700 #1d4ed8 */
   --primary-contrast: #ffffff;
-  --primary-soft:     #f1f3f6;
-  --primary-soft-text: #0e1116;
-  --primary-wash:     rgba(14,17,22,0.04);
-  --primary-tint:     rgba(14,17,22,0.07);
-  --danger:           #e11d48;
-  --danger-soft:      #ffeef0;
-  --success:          #059669;
-  --amber:            #b45309;
-  --sh-xs:    0 1px 2px rgba(15,23,42,0.05);
-  --sh-soft:  0 1px 1px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.06);
-  --sh-float: 0 1px 1px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.06), 0 0 0 1px rgba(15,23,42,0.04);
-  --sh-input: inset 0 1px 2px rgba(15,23,42,0.04);
+  --primary-soft:     oklch(0.96 0.03 263);
+  --primary-soft-text: oklch(0.488 0.217 264);
+  --primary-wash:     oklch(0.546 0.215 263 / 0.05);
+  --primary-tint:     oklch(0.546 0.215 263 / 0.16);
+  --danger:           oklch(0.58 0.21 25);   /* red-600, hue far from the accent */
+  --danger-soft:      oklch(0.97 0.013 25);
+  --success:          oklch(0.62 0.17 150);  /* green-600 */
+  --amber:            oklch(0.55 0.13 75);
+  --sh-xs:    0 1px 2px rgba(24,24,27,0.05);
+  --sh-soft:  0 1px 1px rgba(24,24,27,0.04), 0 8px 24px rgba(24,24,27,0.06);
+  --sh-float: 0 1px 1px rgba(24,24,27,0.04), 0 8px 24px rgba(24,24,27,0.06), 0 0 0 1px rgba(24,24,27,0.04);
+  --sh-input: inset 0 1px 2px rgba(24,24,27,0.04);
   --edge:     inset 0 1px 0 rgba(255,255,255,0.9);
   --btn-edge: rgba(255,255,255,0.85);
   --card-top: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0) 42%);
@@ -51,42 +64,45 @@
   --max-w: 400px;
 }
 
-/* ── Premium dark theme ──
+/* ── Dark theme ──
    Logto sets `data-theme="dark"` on <html>. We flip the SAME base tokens the
    light theme defines, so every component (and every legacy --color-* token,
    which all reference these via var()) follows automatically — no per-component
    dark overrides needed.
 
-   Palette: true near-black canvas (#0b0d10) with layered zinc surfaces, a faint
-   warm-rose brand tint in borders/overlays, and shadows rebuilt for dark (a
-   light surface's drop shadow is invisible on black — depth on dark comes from
-   a hairline top highlight + a deeper ambient shadow). Text targets WCAG-AA on
-   the elevated surface. */
+   Palette: zinc near-black canvas (#09090b — the 2026 "new black", not a flat
+   void) with layered zinc surfaces that get LIGHTER as they elevate (luminance
+   hierarchy: drop shadows don't read on dark, so depth comes from surface
+   lightness + a hairline top highlight). Accent shifts to a brighter blue so it
+   keeps perceptual weight against near-black. Text targets WCAG-AA. */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg:            #0b0d10;
-  --bg-elevated:   #16191e;
-  --surface:       #1c2026;
-  --surface-2:     #262b32;
-  --text:          #eceef2;
-  --text-2:        #c2c7d0;
-  --text-muted:    #9aa1ad;
-  --text-faint:    #6b7280;
-  --border:        #262b32;
-  --border-strong: #363c45;
-  /* On dark, the primary action stays the brand rose so it reads as the accent
-     against near-black (a near-black primary would vanish). */
-  --primary:           #e84a6c;
-  --primary-hover:     #ef5e7d;
+  /* Dark canvas in oklch. Surfaces step UP in lightness as they elevate (luminance
+     hierarchy — drop shadows don't read on near-black, so depth = lighter surface). */
+  --bg:            oklch(0.165 0.004 264);   /* the "new black", not a flat void */
+  --bg-elevated:   oklch(0.215 0.005 264);   /* card — lighter = elevated */
+  --surface:       oklch(0.255 0.006 264);
+  --surface-2:     oklch(0.30  0.007 264);
+  --text:          oklch(0.96  0.002 264);
+  --text-2:        oklch(0.84  0.004 264);
+  --text-muted:    oklch(0.68  0.006 264);
+  --text-faint:    oklch(0.52  0.006 264);
+  --border:        oklch(0.30  0.006 264);
+  --border-strong: oklch(0.38  0.007 264);
+  /* Accent shifts lighter + slightly less chroma on dark to hold perceptual weight
+     against near-black (research: dark accents must preserve weight vs light).
+     blue-500 base / blue-400 hover — mirrors use-color-theme.ts; keep in sync. */
+  --primary:           oklch(0.623 0.188 260);  /* blue-500 #3b82f6 */
+  --primary-hover:     oklch(0.714 0.143 255);  /* blue-400 #60a5fa */
   --primary-contrast:  #ffffff;
-  --primary-soft:      #2a1a20;
-  --primary-soft-text: #f6a7b8;
-  --primary-wash:      rgba(232,74,108,0.08);
-  --primary-tint:      rgba(232,74,108,0.16);
-  --danger:        #fb5c76;
-  --danger-soft:   #2a1418;
-  --success:       #34d399;
-  --amber:         #fbbf24;
+  --primary-soft:      oklch(0.30 0.07 260);
+  --primary-soft-text: oklch(0.809 0.096 252);  /* blue-300 #93c5fd */
+  --primary-wash:      oklch(0.623 0.188 260 / 0.10);
+  --primary-tint:      oklch(0.623 0.188 260 / 0.22);
+  --danger:        oklch(0.68 0.18 25);
+  --danger-soft:   oklch(0.27 0.06 25);
+  --success:       oklch(0.78 0.16 158);
+  --amber:         oklch(0.80 0.14 80);
   /* Depth on dark = subtle top highlight + deeper ambient shadow. */
   --sh-xs:    0 1px 2px rgba(0,0,0,0.4);
   --sh-soft:  0 1px 1px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.45);
@@ -107,10 +123,15 @@
   --color-overlay-neutral-hover:   rgba(255,255,255,0.05);
   --color-overlay-neutral-pressed: rgba(255,255,255,0.09);
   --color-overlay-neutral-focused: rgba(255,255,255,0.14);
-  --color-overlay-brand-hover:     rgba(232,74,108,0.12);
-  --color-overlay-brand-pressed:   rgba(232,74,108,0.18);
-  --color-overlay-brand-focused:   rgba(232,74,108,0.22);
-  --color-overlay-danger-focused:  rgba(251,92,118,0.20);
+  --color-overlay-brand-hover:     rgba(59,130,246,0.14);
+  --color-overlay-brand-pressed:   rgba(59,130,246,0.20);
+  --color-overlay-brand-focused:   rgba(59,130,246,0.26);
+  --color-overlay-danger-focused:  rgba(248,113,113,0.20);
+  /* On dark the danger base is a LIGHTER red (oklch 0.68), so hover/pressed must step
+     LIGHTER (brighter), not darker — the light-mode literals (#b91c1c/#991b1b) would
+     invert the interaction direction on dark. */
+  --color-danger-hover:            oklch(0.74 0.17 25);
+  --color-danger-pressed:          oklch(0.80 0.15 25);
   --color-bg-mask:                 rgba(0,0,0,0.6);
   --color-static-dark-type-primary: #0e1116;
   --color-shadow-2-reversed:       0 -2px 8px rgba(0,0,0,0.4);
@@ -172,23 +193,22 @@
     overflow-x: clip;
   }
 
-  /* Branded ambient canvas — DESKTOP ONLY. A warm rose glow (top-centre) over a faint
-     dot-grid and a soft radial canvas gradient, so the floating card reads with real
-     depth instead of sitting on a flat field. Scoped to body.desktop on purpose: on
-     mobile the card is full-bleed and iOS extends body into the safe-area strips, where
-     a gradient produced mismatched bars before — mobile keeps the solid elevated surface. */
+  /* Neutral ambient canvas — DESKTOP ONLY. A faint dot-grid over a soft radial
+     vignette gives the floating card real depth without any brand tint (this is a
+     multi-tenant screen — the canvas stays brand-agnostic, no rose/blue glow).
+     Scoped to body.desktop on purpose: on mobile the card is full-bleed and iOS
+     extends body into the safe-area strips, where a gradient produced mismatched
+     bars before — mobile keeps the solid elevated surface. */
   body.desktop {
     background:
-      radial-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px) 0 0 / 22px 22px,
-      radial-gradient(55% 45% at 50% 0%, rgba(225, 29, 72, 0.12) 0%, rgba(225, 29, 72, 0) 68%),
-      radial-gradient(80% 80% at 50% 45%, #f3f4f6 0%, #e6e8ec 100%);
+      radial-gradient(rgba(24, 24, 27, 0.045) 1px, transparent 1px) 0 0 / 22px 22px,
+      radial-gradient(85% 85% at 50% 40%, #f5f5f6 0%, #e6e6e9 100%);
     background-attachment: fixed;
   }
   :root[data-theme="dark"] body.desktop {
     background:
       radial-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px) 0 0 / 22px 22px,
-      radial-gradient(60% 50% at 50% 0%, rgba(232, 74, 108, 0.12) 0%, rgba(232, 74, 108, 0) 70%),
-      radial-gradient(90% 90% at 50% 30%, #0e0e11 0%, #09090b 100%);
+      radial-gradient(90% 90% at 50% 35%, #111113 0%, #09090b 100%);
     background-attachment: fixed;
   }
 
@@ -219,9 +239,9 @@
   h1, h2, .text-balance { text-wrap: balance; }
   :focus { outline: none; }
   /* Keyboard focus ring for buttons / links / generic controls. EXCLUDES text inputs,
-     textareas and selects: those already render their own border + soft rose ring
-     (.input-base:focus), and adding this hard 2px outline on top drew a second line —
-     a near-black bar in light mode where --primary is near-black. */
+     textareas and selects: those already render their own border + soft blue accent
+     ring (.input-base:focus), and adding this hard 2px outline on top would draw a
+     second line over the accent ring. */
   :focus-visible:not(input):not(textarea):not(select) {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
@@ -248,11 +268,11 @@
     --font-body-3:     400 12px/16px var(--font-sans);
     --color-brand-default:          var(--primary);
     --color-brand-hover:            var(--primary-hover);
-    --color-brand-pressed:          #000;
-    --color-brand-loading:          #2a2a2a;
+    --color-brand-pressed:          #1e40af;   /* blue-800 */
+    --color-brand-loading:          rgba(255,255,255,0.65);
     --color-danger-default:         var(--danger);
-    --color-danger-hover:           #c8103a;
-    --color-danger-pressed:         #a50d2f;
+    --color-danger-hover:           #b91c1c;   /* red-700 */
+    --color-danger-pressed:         #991b1b;   /* red-800 */
     --color-success-default:        var(--success);
     --color-type-primary:           var(--text);
     --color-type-secondary:         var(--text-muted);
@@ -276,10 +296,10 @@
     --color-overlay-neutral-hover:   rgba(14,17,22,0.04);
     --color-overlay-neutral-pressed: rgba(14,17,22,0.08);
     --color-overlay-neutral-focused: rgba(14,17,22,0.12);
-    --color-overlay-brand-hover:     rgba(14,17,22,0.06);
-    --color-overlay-brand-pressed:   rgba(14,17,22,0.10);
-    --color-overlay-brand-focused:   rgba(14,17,22,0.14);
-    --color-overlay-danger-focused:  rgba(225,29,72,0.14);
+    --color-overlay-brand-hover:     rgba(37,99,235,0.07);
+    --color-overlay-brand-pressed:   rgba(37,99,235,0.12);
+    --color-overlay-brand-focused:   rgba(37,99,235,0.18);
+    --color-overlay-danger-focused:  rgba(220,38,38,0.14);
     --color-hover-variant:           var(--primary-wash);
     --color-focused-variant:         var(--primary-tint);
     --color-shadow-1:                var(--sh-soft);
@@ -400,14 +420,9 @@
       inset 0 1px 0 var(--btn-edge),
       0 4px 14px var(--color-overlay-brand-focused);
   }
-  /* Desktop hover-lift on the primary button (the custom CSS had this on every button;
-     ghost/social already lift — this brings the primary in line). Pointer-only so it
-     never fires on touch. The :active inset/scale below overrides it on press. */
-  @media (hover: hover) and (pointer: fine) {
-    body.desktop .btn-primary:hover:not(:disabled):not(:active) {
-      transform: translateY(-1px);
-    }
-  }
+  /* No hover-lift by design — hover changes colour/shadow only, not vertical
+     position (translate lifts read as jumpy and were explicitly dropped). The
+     :active scale/inset below still gives a tactile press. */
 
   /* Ghost / secondary button */
   .btn-ghost {
@@ -427,7 +442,7 @@
     color: #fff;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), var(--sh-xs);
   }
-  .btn-danger:hover:not(:disabled) { background: #c8103a; }
+  .btn-danger:hover:not(:disabled) { background: var(--color-danger-hover); }
 
   /* Text input */
   .input-base {

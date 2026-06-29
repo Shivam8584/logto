@@ -42,6 +42,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
   );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
 
   const errorMessage = inputErrorMessage ?? submitErrorMessage;
 
@@ -57,8 +58,12 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
 
-      await onSubmit(code.join(''));
-      setIsSubmitting(false);
+      try {
+        await onSubmit(code.join(''));
+      } finally {
+        // Always reset, even if `onSubmit` throws, so the button never sticks.
+        setIsSubmitting(false);
+      }
     },
     [onSubmit, isSubmitting]
   );
@@ -89,11 +94,23 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
                 <TextLink
                   className="cursor-pointer"
                   onClick={async () => {
+                    // Guard against a burst of clicks during the in-flight resend: the
+                    // countdown only restarts AFTER the API resolves, so without this the
+                    // link stays clickable and each call invalidates the previous code.
+                    if (isResending) {
+                      return;
+                    }
+
                     setInputErrorMessage(undefined);
                     setCodeInput([]);
-                    const newId = await onResendVerificationCode();
-                    if (newId) {
-                      setCurrentVerificationId(newId);
+                    setIsResending(true);
+                    try {
+                      const newId = await onResendVerificationCode();
+                      if (newId) {
+                        setCurrentVerificationId(newId);
+                      }
+                    } finally {
+                      setIsResending(false);
                     }
                   }}
                 />
